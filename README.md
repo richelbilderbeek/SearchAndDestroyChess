@@ -1,0 +1,2 @@
+# SearchAndDestroyChess
+C++ Kriegspiel game
