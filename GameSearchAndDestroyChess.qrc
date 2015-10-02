@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/sadc/images">
+        <file>GameSearchAndDestroyChessR.png</file>
+    </qresource>
+</RCC>
