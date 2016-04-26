@@ -13,7 +13,9 @@ SOURCES += main.cpp \
     game_dialog.cpp \
     command.cpp \
     game.cpp \
-    game_state.cpp
+    game_state.cpp \
+    texture_type.cpp \
+    textures.cpp
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
@@ -29,4 +31,6 @@ HEADERS += \
     game_dialog.h \
     command.h \
     game.h \
-    game_state.h
+    game_state.h \
+    texture_type.h \
+    textures.h

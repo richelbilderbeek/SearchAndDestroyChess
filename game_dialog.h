@@ -5,7 +5,8 @@
 #include "command.h"
 #include "game.h"
 #include "game_state.h"
-#include <SFML/Graphics/Sprite.h>
+#include "textures.h"
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace sf { struct RenderWindow; }
 namespace sf { struct Texture; }
@@ -26,8 +27,7 @@ private:
   game_state m_game_state;
   int m_select_x;
   int m_select_y;
-  sf::Texture m_texture_dark_square;
-  sf::Texture m_texture_light_square;
+  textures m_textures;
   int m_window_height;
   int m_window_width;
 

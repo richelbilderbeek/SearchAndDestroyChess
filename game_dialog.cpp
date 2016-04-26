@@ -1,5 +1,7 @@
 #include "game_dialog.h"
 
+#include <SFML/Graphics/RenderWindow.hpp>
+
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
@@ -114,8 +116,9 @@ void game_dialog::do_select(const int cursorX, const int cursorY)
 void game_dialog::draw(sf::RenderWindow& window)
 {
   const std::vector<std::vector<bool>> inSight = m_game.GetInSight();
-  const double squareWidth  = static_cast<double>(ClientWidth ) / 8.0;
-  const double squareHeight = static_cast<double>(ClientHeight) / 8.0;
+
+  const double squareWidth  = static_cast<double>(window.getSize().x) / 8.0;
+  const double squareHeight = static_cast<double>(window.getSize().y) / 8.0;
   //The CoordinatGetter transforms the coordinats of the board,
   //according to the player whose turn it is
   const CoordinatGetter coordinatGetter ( m_game.GetWhoseTurn());
@@ -129,7 +132,8 @@ void game_dialog::draw(sf::RenderWindow& window)
     {
       for (int x=0; x!=8; ++x)
       {
-        sf::Texture * t = ( (x + y) % 2 == 0 ? m_texture_light_square: m_texture_dark_square);
+        sf::Texture& t = m_textures.get_square((x + y) % 2 == 0 ? black : white);
+
         //Draw it
         ImageBuffer->Canvas->StretchDraw(
           TRect( TPoint( ( coordinatGetter.GetX(x) + 0 ) * squareWidth ,
