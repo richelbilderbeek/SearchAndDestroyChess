@@ -4,9 +4,9 @@
 #include <stdexcept>
 
 
-#include "UnitEnumChessPieceType.h"
+#include "piece_type.h"
 
-std::ostream& operator<<(std::ostream& os, const EnumChessPieceType& type)
+std::ostream& operator<<(std::ostream& os, const piece_type& type)
 {
   switch (type)
   {

@@ -1,15 +1,15 @@
 #ifndef UnitCoordinatGetterH
 #define UnitCoordinatGetterH
 
-#include "UnitEnumChessPieceColor.h"
+#include "piece_color.h"
 
 struct CoordinatGetter
 {
-  CoordinatGetter(const EnumChessPieceColor color)
+  CoordinatGetter(const piece_color color)
     : mColor(color) {}
   int GetX(const int x) const;
   int GetY(const int y) const;
-  EnumChessPieceColor mColor;
+  piece_color mColor;
 };
 
 #endif

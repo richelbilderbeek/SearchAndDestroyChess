@@ -7,14 +7,12 @@ SOURCES += main.cpp \
     UnitChessMove.cpp \
     UnitChessPiece.cpp \
     UnitCoordinatGetter.cpp \
-    UnitEnumChessPieceColor.cpp \
-    UnitEnumChessPieceType.cpp \
-    UnitFormPressKey.cpp \
+    piece_color.cpp \
+    piece_type.cpp \
     game_dialog.cpp \
     command.cpp \
     game.cpp \
     game_state.cpp \
-    texture_type.cpp \
     textures.cpp
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra
@@ -25,12 +23,10 @@ HEADERS += \
     UnitChessMove.h \
     UnitChessPiece.h \
     UnitCoordinatGetter.h \
-    UnitEnumChessPieceColor.h \
-    UnitEnumChessPieceType.h \
-    UnitFormPressKey.h \
+    piece_color.h \
+    piece_type.h \
     game_dialog.h \
     command.h \
     game.h \
     game_state.h \
-    texture_type.h \
     textures.h

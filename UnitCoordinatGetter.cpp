@@ -2,7 +2,7 @@
 
 int CoordinatGetter::GetX(const int x) const
 {
-  if (mColor == white)
+  if (mColor == piece_color::white)
   {
     return x;
   }
@@ -14,7 +14,7 @@ int CoordinatGetter::GetX(const int x) const
 
 int CoordinatGetter::GetY(const int y) const
 {
-  if (mColor == white)
+  if (mColor == piece_color::white)
   {
     return 7 - y;
   }

@@ -21,8 +21,8 @@
 #ifndef UnitChessGameH
 #define UnitChessGameH
 
-#include "UnitEnumChessPieceColor.h"
-#include "UnitEnumChessPieceType.h"
+#include "piece_color.h"
+#include "piece_type.h"
 #include "UnitChessBoard.h"
 #include "UnitChessMove.h"
 
@@ -40,18 +40,18 @@ struct ChessGame
   void CoutBoard() const;
 
   const ChessBoard& GetBoard() const { return mBoard; }
-  EnumChessPieceColor GetWhoseTurn() const { return mWhoseTurn; }
+  piece_color GetWhoseTurn() const { return mWhoseTurn; }
 
   const std::vector<std::vector<bool> > GetInSight() const;
 
   bool IsGameOver() const;
-  EnumChessPieceColor GetWinner() const;
+  piece_color GetWinner() const;
 
   bool ParseMove(const std::string& s,ChessMove& move) const;
 
   private:
   ChessBoard mBoard;
-  EnumChessPieceColor mWhoseTurn;
+  piece_color mWhoseTurn;
 
   std::vector<double> AttributeValues(
     const std::vector<ChessMove>& moves) const;

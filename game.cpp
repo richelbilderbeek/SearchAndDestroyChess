@@ -9,7 +9,7 @@
 #include "game.h"
 
 ChessGame::ChessGame()
-  : mWhoseTurn(white)
+  : mWhoseTurn(piece_color::white)
 {
 
 }
@@ -30,7 +30,7 @@ void ChessGame::DoMove(const ChessMove& move)
 {
   assert(this->CanDoMove(move)==true);
   mBoard.DoMove(move);
-  mWhoseTurn = (mWhoseTurn == white ? black : white);
+  mWhoseTurn = (mWhoseTurn == piece_color::white ? piece_color::black : piece_color::white);
 }
 
 void ChessGame::CoutGame() const
@@ -38,7 +38,7 @@ void ChessGame::CoutGame() const
   mBoard.CoutSight(mWhoseTurn);
   std::cout
     << std::endl
-    << (mWhoseTurn == white ? "White" : "Black")
+    << (mWhoseTurn == piece_color::white ? "White" : "Black")
     << " player's turn"
     << std::endl;
 }
@@ -48,7 +48,7 @@ void ChessGame::CoutBoard() const
   mBoard.CoutPieces(mWhoseTurn);
   std::cout
     << std::endl
-    << (mWhoseTurn == white ? "White" : "Black")
+    << (mWhoseTurn == piece_color::white ? "White" : "Black")
     << " player's turn"
     << std::endl;
 }
@@ -58,7 +58,7 @@ bool ChessGame::IsGameOver() const
   return mBoard.IsGameOver();
 }
 
-EnumChessPieceColor ChessGame::GetWinner() const
+piece_color ChessGame::GetWinner() const
 {
   assert(this->IsGameOver()==true);
   return mBoard.GetWinner();
@@ -111,7 +111,7 @@ double ChessGame::AttributeValue(
   const int x2 = move.x2;
   const ChessPiece piece = mBoard.GetPiece(x1,y1);
   assert(piece.IsNull()==false);
-  //const EnumChessPieceColor color = piece.GetColor();
+  //const piece_color color = piece.GetColor();
 
   if (mBoard.GetPiece(x2,y2).IsNull()==false)
   {
@@ -151,13 +151,13 @@ bool ChessGame::ParseMove(
   //If there is no upper case, it is a pawn
   if (s=="o-o" || s=="O-O" || s == "0-0")
   {
-    const int y = (this->GetWhoseTurn() == white ? 0 : 7);
+    const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
     move = ChessMove(king,4,y,false,6,y);
     return true;
   }
   if (s=="o-o-o" || s=="O-O-O" || s == "0-0-0")
   {
-    const int y = (this->GetWhoseTurn() == white ? 0 : 7);
+    const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
     move = ChessMove(king,4,y,false,2,y);
     return true;
   }

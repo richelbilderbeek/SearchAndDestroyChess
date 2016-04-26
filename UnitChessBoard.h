@@ -23,7 +23,7 @@
 
 #include <iosfwd>
 #include <vector>
-#include "UnitEnumChessPieceColor.h"
+#include "piece_color.h"
 #include "UnitChessMove.h"
 #include "UnitChessPiece.h"
 
@@ -41,16 +41,16 @@ struct ChessBoard
   void DoMove(const ChessMove& move);
   const ChessPiece GetPiece(const int x, const int y) const;
 
-  const std::vector<std::vector<bool> > GetInSight(const EnumChessPieceColor color) const;
+  const std::vector<std::vector<bool> > GetInSight(const piece_color color) const;
 
   std::vector<ChessMove> GetAllValidMoves(const int x, const int y) const;
-  std::vector<ChessMove> GetAllPossibleMoves(const EnumChessPieceColor whoseTurn) const;
+  std::vector<ChessMove> GetAllPossibleMoves(const piece_color whoseTurn) const;
 
-  void CoutPieces(const EnumChessPieceColor color) const;
-  void CoutSight(const EnumChessPieceColor color) const;
+  void CoutPieces(const piece_color color) const;
+  void CoutSight(const piece_color color) const;
 
   bool IsGameOver() const;
-  EnumChessPieceColor GetWinner() const;
+  piece_color GetWinner() const;
 
   private:
 
@@ -70,8 +70,8 @@ struct ChessBoard
   std::vector<ChessMove> GetAllValidMovesQueen(const int x, const int y) const;
   std::vector<ChessMove> GetAllValidMovesKing(const int x, const int y) const;
 
-  bool CanDoCastlingShort(const EnumChessPieceColor color) const;
-  bool CanDoCastlingLong(const EnumChessPieceColor color) const;
+  bool CanDoCastlingShort(const piece_color color) const;
+  bool CanDoCastlingLong(const piece_color color) const;
 };
 
 #endif

@@ -40,23 +40,23 @@ textures::textures()
 }
 
 const sf::Texture& textures::get_square(
-  const EnumChessPieceColor c
+  const piece_color c
 ) const
 {
   switch (c)
   {
-    case EnumChessPieceColor::white: return m_square_light;
-    case EnumChessPieceColor::black: return m_square_dark;
+    case piece_color::white: return m_square_light;
+    case piece_color::black: return m_square_dark;
   }
-  throw std::runtime_error("textures::get_square");
+  throw std::logic_error("textures::get_square");
 }
 
 const sf::Texture& textures::get(
-  const EnumChessPieceType t,
-  const EnumChessPieceColor c
+  const piece_type t,
+  const piece_color c
 ) const
 {
-  if (c == white)
+  if (c == piece_color::white)
   {
     switch(t)
     {
@@ -70,7 +70,7 @@ const sf::Texture& textures::get(
   }
   else
   {
-    assert(c == black);
+    assert(c == piece_color::black);
     switch(t)
     {
       case bishop: return m_bb;
@@ -81,4 +81,5 @@ const sf::Texture& textures::get(
       case rook: return m_rb;
     }
   }
+  throw std::logic_error("textures::get");
 }

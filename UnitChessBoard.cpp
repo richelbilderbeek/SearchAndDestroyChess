@@ -36,7 +36,7 @@ bool ChessBoard::IsGameOver() const
       const ChessPiece piece = mPieces[y][x];
       if (piece.IsNull()==false && piece.GetType()==king)
       {
-        if (piece.GetColor() == white)
+        if (piece.GetColor() == piece_color::white)
           whiteHasKing = true;
         else
           blackHasKing = true;
@@ -46,7 +46,7 @@ bool ChessBoard::IsGameOver() const
   return (whiteHasKing == false || blackHasKing == false);
 }
 
-EnumChessPieceColor ChessBoard::GetWinner() const
+piece_color ChessBoard::GetWinner() const
 {
   assert(this->IsGameOver()==true);
   for (int y=0; y!=8; ++y)
@@ -56,10 +56,10 @@ EnumChessPieceColor ChessBoard::GetWinner() const
       const ChessPiece piece = mPieces[y][x];
       if (piece.GetType()==king)
       {
-        if (piece.GetColor() == white)
-          return white;
+        if (piece.GetColor() == piece_color::white)
+          return piece_color::white;
         else
-          return black;
+          return piece_color::black;
       }
     }
   }
@@ -99,9 +99,9 @@ void ChessBoard::DoMove(const ChessMove& move)
     && move.x1 == 4
     && (move.x2 == 2 || move.x2 == 6) )
   {
-    const EnumChessPieceColor color = piece.GetColor();
-    assert( (color == white && move.y1 == 0 && move.y2 == 0)
-      ||    (color == black && move.y1 == 7 && move.y2 == 7) );
+    const piece_color color = piece.GetColor();
+    assert( (color == piece_color::white && move.y1 == 0 && move.y2 == 0)
+      ||    (color == piece_color::black && move.y1 == 7 && move.y2 == 7) );
     const int y = move.y2;
     //Castling
     if (move.x2 == 2)
@@ -147,10 +147,10 @@ void ChessBoard::DoMove(const ChessMove& move)
   mMoves.push_back(move);
 }
 
-bool ChessBoard::CanDoCastlingShort(const EnumChessPieceColor color) const
+bool ChessBoard::CanDoCastlingShort(const piece_color color) const
 {
   //Determine the y
-  const int y = (color == white ? 0 : 7);
+  const int y = (color == piece_color::white ? 0 : 7);
   //King must be in place
   if(this->GetPiece(4,y).GetType() != king) return false;
   //Is the rook in place?
@@ -171,10 +171,10 @@ bool ChessBoard::CanDoCastlingShort(const EnumChessPieceColor color) const
   return true;
 }
 
-bool ChessBoard::CanDoCastlingLong(const EnumChessPieceColor color) const
+bool ChessBoard::CanDoCastlingLong(const piece_color color) const
 {
   //Determine the y
-  const int y = (color == white ? 0 : 7);
+  const int y = (color == piece_color::white ? 0 : 7);
   //King must be in place
   if(this->GetPiece(4,y).GetType() != king) return false;
   //Is the rook in place?
@@ -200,53 +200,53 @@ const std::vector<std::vector<ChessPiece> > ChessBoard::GetInitialSetup()
 {
   std::vector<std::vector<ChessPiece> > v(8,std::vector<ChessPiece>(8));
   //v has [y][x] index
-  v[0][0] = ChessPiece(white,rook  );
-  v[0][1] = ChessPiece(white,knight);
-  v[0][2] = ChessPiece(white,bishop);
-  v[0][3] = ChessPiece(white,queen );
-  v[0][4] = ChessPiece(white,king  );
-  v[0][5] = ChessPiece(white,bishop);
-  v[0][6] = ChessPiece(white,knight);
-  v[0][7] = ChessPiece(white,rook  );
-  v[1][0] = ChessPiece(white,pawn  );
-  v[1][1] = ChessPiece(white,pawn  );
-  v[1][2] = ChessPiece(white,pawn  );
-  v[1][3] = ChessPiece(white,pawn  );
-  v[1][4] = ChessPiece(white,pawn  );
-  v[1][5] = ChessPiece(white,pawn  );
-  v[1][6] = ChessPiece(white,pawn  );
-  v[1][7] = ChessPiece(white,pawn  );
-  v[7][0] = ChessPiece(black,rook  );
-  v[7][1] = ChessPiece(black,knight);
-  v[7][2] = ChessPiece(black,bishop);
-  v[7][3] = ChessPiece(black,queen );
-  v[7][4] = ChessPiece(black,king  );
-  v[7][5] = ChessPiece(black,bishop);
-  v[7][6] = ChessPiece(black,knight);
-  v[7][7] = ChessPiece(black,rook  );
-  v[6][0] = ChessPiece(black,pawn  );
-  v[6][1] = ChessPiece(black,pawn  );
-  v[6][2] = ChessPiece(black,pawn  );
-  v[6][3] = ChessPiece(black,pawn  );
-  v[6][4] = ChessPiece(black,pawn  );
-  v[6][5] = ChessPiece(black,pawn  );
-  v[6][6] = ChessPiece(black,pawn  );
-  v[6][7] = ChessPiece(black,pawn  );
+  v[0][0] = ChessPiece(piece_color::white,rook  );
+  v[0][1] = ChessPiece(piece_color::white,knight);
+  v[0][2] = ChessPiece(piece_color::white,bishop);
+  v[0][3] = ChessPiece(piece_color::white,queen );
+  v[0][4] = ChessPiece(piece_color::white,king  );
+  v[0][5] = ChessPiece(piece_color::white,bishop);
+  v[0][6] = ChessPiece(piece_color::white,knight);
+  v[0][7] = ChessPiece(piece_color::white,rook  );
+  v[1][0] = ChessPiece(piece_color::white,pawn  );
+  v[1][1] = ChessPiece(piece_color::white,pawn  );
+  v[1][2] = ChessPiece(piece_color::white,pawn  );
+  v[1][3] = ChessPiece(piece_color::white,pawn  );
+  v[1][4] = ChessPiece(piece_color::white,pawn  );
+  v[1][5] = ChessPiece(piece_color::white,pawn  );
+  v[1][6] = ChessPiece(piece_color::white,pawn  );
+  v[1][7] = ChessPiece(piece_color::white,pawn  );
+  v[7][0] = ChessPiece(piece_color::black,rook  );
+  v[7][1] = ChessPiece(piece_color::black,knight);
+  v[7][2] = ChessPiece(piece_color::black,bishop);
+  v[7][3] = ChessPiece(piece_color::black,queen );
+  v[7][4] = ChessPiece(piece_color::black,king  );
+  v[7][5] = ChessPiece(piece_color::black,bishop);
+  v[7][6] = ChessPiece(piece_color::black,knight);
+  v[7][7] = ChessPiece(piece_color::black,rook  );
+  v[6][0] = ChessPiece(piece_color::black,pawn  );
+  v[6][1] = ChessPiece(piece_color::black,pawn  );
+  v[6][2] = ChessPiece(piece_color::black,pawn  );
+  v[6][3] = ChessPiece(piece_color::black,pawn  );
+  v[6][4] = ChessPiece(piece_color::black,pawn  );
+  v[6][5] = ChessPiece(piece_color::black,pawn  );
+  v[6][6] = ChessPiece(piece_color::black,pawn  );
+  v[6][7] = ChessPiece(piece_color::black,pawn  );
   return v;
 }
 
 //Color denotes the player who's turn it is, i.e. the player looking at the board
 void ChessBoard::CoutPieces(
-  const EnumChessPieceColor color) const
+  const piece_color color) const
 {
-  const int yBegin = (color == black ? 0 : 7);
-  const int yEnd   = (color == black ? 8 : -1);
-  const int yStep  = (color == black ? 1 : -1);
-  const int xBegin = (color == white ? 0 : 7);
-  const int xEnd   = (color == white ? 8 : -1);
-  const int xStep  = (color == white ? 1 : -1);
+  const int yBegin = (color == piece_color::black ? 0 : 7);
+  const int yEnd   = (color == piece_color::black ? 8 : -1);
+  const int yStep  = (color == piece_color::black ? 1 : -1);
+  const int xBegin = (color == piece_color::white ? 0 : 7);
+  const int xEnd   = (color == piece_color::white ? 8 : -1);
+  const int xStep  = (color == piece_color::white ? 1 : -1);
 
-  if (color == white)
+  if (color == piece_color::white)
     std::cout << "   A  B  C  D  E  F  G  H " << std::endl;
   else
     std::cout << "   H  G  F  E  D  C  B  A " << std::endl;
@@ -263,7 +263,7 @@ void ChessBoard::CoutPieces(
 
   }
   std::cout << "  -------------------------" << std::endl;
-  if (color == white)
+  if (color == piece_color::white)
     std::cout << "   A  B  C  D  E  F  G  H " << std::endl;
   else
     std::cout << "   H  G  F  E  D  C  B  A " << std::endl;
@@ -272,19 +272,19 @@ void ChessBoard::CoutPieces(
 
 //Color denotes the player who's turn it is, i.e. the player looking at the board
 void ChessBoard::CoutSight(
-  const EnumChessPieceColor color) const
+  const piece_color color) const
 {
   //
   const std::vector<std::vector<bool> > inSight = this->GetInSight(color);
 
-  const int yBegin = (color == black ? 0 : 7);
-  const int yEnd   = (color == black ? 8 : -1);
-  const int yStep  = (color == black ? 1 : -1);
-  const int xBegin = (color == white ? 0 : 7);
-  const int xEnd   = (color == white ? 8 : -1);
-  const int xStep  = (color == white ? 1 : -1);
+  const int yBegin = (color == piece_color::black ? 0 : 7);
+  const int yEnd   = (color == piece_color::black ? 8 : -1);
+  const int yStep  = (color == piece_color::black ? 1 : -1);
+  const int xBegin = (color == piece_color::white ? 0 : 7);
+  const int xEnd   = (color == piece_color::white ? 8 : -1);
+  const int xStep  = (color == piece_color::white ? 1 : -1);
 
-  if (color == white)
+  if (color == piece_color::white)
     std::cout << "   A  B  C  D  E  F  G  H " << std::endl;
   else
     std::cout << "   H  G  F  E  D  C  B  A " << std::endl;
@@ -301,7 +301,7 @@ void ChessBoard::CoutSight(
 
   }
   std::cout << "  -------------------------" << std::endl;
-  if (color == white)
+  if (color == piece_color::white)
     std::cout << "   A  B  C  D  E  F  G  H " << std::endl;
   else
     std::cout << "   H  G  F  E  D  C  B  A " << std::endl;
@@ -309,7 +309,7 @@ void ChessBoard::CoutSight(
 
 }
 
-const std::vector<std::vector<bool> > ChessBoard::GetInSight(const EnumChessPieceColor color) const
+const std::vector<std::vector<bool> > ChessBoard::GetInSight(const piece_color color) const
 {
   std::vector<std::vector<bool> > inSight(8, std::vector<bool>(8,false));
 
@@ -333,7 +333,7 @@ const std::vector<std::vector<bool> > ChessBoard::GetInSight(const EnumChessPiec
       //Special treatment of pawns
       if (piece.GetType() == pawn)
       {
-        if (piece.GetColor()==white)
+        if (piece.GetColor()==piece_color::white)
         {
           //Always look a single square forward
           inSight[y+1][x] = true;
@@ -408,7 +408,7 @@ bool ChessBoard::IsValidMove(const ChessMove& move) const
 }
 
 std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
-  const EnumChessPieceColor whoseTurn) const
+  const piece_color whoseTurn) const
 {
   std::vector<ChessMove> allMoves;
   for (int y=0; y!=8; ++y)
@@ -445,7 +445,7 @@ std::vector<ChessMove> ChessBoard::GetAllValidMoves(
     case king  : return GetAllValidMovesKing(x,y);
   }
   assert(!"Should not get here");
-  throw std::logic_error("Unknown EnumChessPieceType");
+  throw std::logic_error("Unknown piece_type");
 }
 
 std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
@@ -457,7 +457,7 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
 
   std::vector<ChessMove> moves;
 
-  if (piece.GetColor()==white)
+  if (piece.GetColor()==piece_color::white)
   {
     //Move single square forward
     if (GetPiece(x,y+1).IsNull()==true)
@@ -474,14 +474,14 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
     //Capture left
     if (x > 0
       && GetPiece(x-1,y+1).IsNull()==false
-      && GetPiece(x-1,y+1).GetColor()==black)
+      && GetPiece(x-1,y+1).GetColor()==piece_color::black)
     {
       moves.push_back(ChessMove(pawn,x,y,true,x-1,y+1));
     }
     //Capture right
     if (x < 7
       && GetPiece(x+1,y+1).IsNull()==false
-      && GetPiece(x+1,y+1).GetColor()==black)
+      && GetPiece(x+1,y+1).GetColor()==piece_color::black)
     {
       moves.push_back(ChessMove(pawn,x,y,true,x+1,y+1));
     }
@@ -519,14 +519,14 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
     //Capture left
     if (x > 0
       && GetPiece(x-1,y-1).IsNull()==false
-      && GetPiece(x-1,y-1).GetColor()==white)
+      && GetPiece(x-1,y-1).GetColor()==piece_color::white)
     {
       moves.push_back(ChessMove(pawn,x,y,true,x-1,y-1));
     }
     //Capture right
     if (x < 7
       && GetPiece(x+1,y-1).IsNull()==false
-      && GetPiece(x+1,y-1).GetColor()==white)
+      && GetPiece(x+1,y-1).GetColor()==piece_color::white)
     {
       moves.push_back(ChessMove(pawn,x,y,true,x+1,y-1));
     }

@@ -52,7 +52,7 @@ void game_dialog::do_move()
   const ChessPiece piece = m_game.GetBoard().GetPiece(x1,y1);
   assert(piece.IsNull()==false
     && "User must not be able to select an empty square do do a move from");
-  const EnumChessPieceType type = piece.GetType();
+  const piece_type type = piece.GetType();
   const ChessPiece victim = m_game.GetBoard().GetPiece(x2,y2);
   const bool capture = (victim.IsNull()==true ? false : true);
   const ChessMove move(type,x1,y1,capture,x2,y2);
@@ -75,7 +75,7 @@ void game_dialog::do_move(const ChessMove& move)
   //Has someone won?
   if (m_game.IsGameOver())
   {
-    m_game_state = m_game.GetWinner() == white ? game_state::player_1_won : game_state::player_2_won;
+    m_game_state = m_game.GetWinner() == piece_color::white ? game_state::player_1_won : game_state::player_2_won;
     return;
   }
 
@@ -135,7 +135,10 @@ void game_dialog::draw(sf::RenderWindow& window)
     {
       for (int x=0; x!=8; ++x)
       {
-        const sf::Texture& t = m_textures.get_square((x + y) % 2 == 0 ? black : white);
+        const sf::Texture& t = m_textures.get_square((x + y) % 2 == 0
+          ? piece_color::black
+          : piece_color::white
+        );
         sf::Sprite sprite;
         sprite.setTexture(t);
         sprite.setPosition(
@@ -242,7 +245,7 @@ void game_dialog::process_command(const command c)
   switch (c)
   {
     case command::left:
-      if (m_game.GetWhoseTurn()==white)
+      if (m_game.GetWhoseTurn()==piece_color::white)
       {
         --m_cursor_x; if (m_cursor_x < 0) m_cursor_x = 0;
       }
@@ -252,7 +255,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::right:
-      if (m_game.GetWhoseTurn()==white)
+      if (m_game.GetWhoseTurn()==piece_color::white)
       {
         ++m_cursor_x; if (m_cursor_x > 7) m_cursor_x = 7;
       }
@@ -262,7 +265,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::down:
-      if (m_game.GetWhoseTurn()==white)
+      if (m_game.GetWhoseTurn()==piece_color::white)
       {
         --m_cursor_y; if (m_cursor_y < 0) m_cursor_y = 0;
       }
@@ -272,7 +275,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::up:
-      if (m_game.GetWhoseTurn()==white)
+      if (m_game.GetWhoseTurn()==piece_color::white)
       {
         ++m_cursor_y; if (m_cursor_y > 7) m_cursor_y = 7;
       }

@@ -22,26 +22,26 @@
 #define UnitChessPieceH
 
 #include <iosfwd>
-#include "UnitEnumChessPieceType.h"
-#include "UnitEnumChessPieceColor.h"
+#include "piece_type.h"
+#include "piece_color.h"
 
 //Read-only
 struct ChessPiece
 {
   ChessPiece()
-    : mColor(white), mType(pawn), mIsNull(true) {}
+    : mColor(piece_color::white), mType(pawn), mIsNull(true) {}
   ChessPiece(
-    const EnumChessPieceColor color,
-    const EnumChessPieceType type)
+    const piece_color color,
+    const piece_type type)
     : mColor(color), mType(type), mIsNull(false) {}
 
-  EnumChessPieceColor GetColor() const { return mColor; }
-  EnumChessPieceType GetType() const { return mType; }
+  piece_color GetColor() const { return mColor; }
+  piece_type GetType() const { return mType; }
   int IsNull() const { return mIsNull; }
 
   private:
-    EnumChessPieceColor mColor;
-    EnumChessPieceType mType;
+    piece_color mColor;
+    piece_type mType;
     bool mIsNull;
 };
 

@@ -3,9 +3,8 @@
 
 #include <map>
 #include <SFML/Graphics/Texture.hpp>
-#include "texture_type.h"
-#include "UnitEnumChessPieceColor.h"
-#include "UnitEnumChessPieceType.h"
+#include "piece_color.h"
+#include "piece_type.h"
 
 ///Contains all textures
 class textures
@@ -15,12 +14,12 @@ public:
 
   ///Board
   const sf::Texture& get_square(
-    const EnumChessPieceColor c
+    const piece_color c
   ) const;
 
   const sf::Texture& get(
-    const EnumChessPieceType t,
-    const EnumChessPieceColor c
+    const piece_type t,
+    const piece_color c
   ) const;
 
   const sf::Texture& get_question_mark() const { return m_question_mark; }

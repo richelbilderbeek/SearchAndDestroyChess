@@ -1,12 +1,12 @@
 #ifndef UnitChessMoveH
 #define UnitChessMoveH
 
-#include "UnitEnumChessPieceType.h"
+#include "piece_type.h"
 
 struct ChessMove
 {
   ChessMove(
-    const EnumChessPieceType anyType = king,
+    const piece_type anyType = king,
     const int anyX1 = 0,
     const int anyY1 = 0,
     const bool anyCapture = true,
@@ -21,7 +21,7 @@ struct ChessMove
   {
 
   }
-  EnumChessPieceType type;
+  piece_type type;
   int x1;
   int y1;
   bool capture;
