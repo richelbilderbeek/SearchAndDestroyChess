@@ -3,7 +3,6 @@
 
 enum class game_state
 {
-  draw,
   player_1_won,
   player_2_won,
   playing,

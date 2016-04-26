@@ -2,77 +2,78 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include "UnitChessBoard.h"
-#include "UnitChessPiece.h"
+#include "chess_board.h"
+#include "chess_piece.h"
 
 
 #include "game.h"
 
-ChessGame::ChessGame()
-  : mWhoseTurn(piece_color::white)
+chess_game::chess_game()
+  : m_board{},
+    m_whose_turn(piece_color::white)
 {
 
 }
 
-bool ChessGame::CanDoMove(const ChessMove& move) const
+bool chess_game::CanDoMove(const chess_move& move) const
 {
   //Regular move
-  const ChessPiece piece = mBoard.GetPiece(move.x1,move.y1);
+  const chess_piece piece = m_board.GetPiece(move.x1,move.y1);
   //Is it of the right color?
-  if (piece.GetColor()!=mWhoseTurn) return false;
+  if (piece.GetColor()!=m_whose_turn) return false;
   //Is the captured piece of the other color?
   //->checked by ChessBoard
   //ChessBoard checks the rest
-  return mBoard.CanDoMove(move);
+  return m_board.CanDoMove(move);
 }
 
-void ChessGame::DoMove(const ChessMove& move)
+void chess_game::DoMove(const chess_move& move)
 {
-  assert(this->CanDoMove(move)==true);
-  mBoard.DoMove(move);
-  mWhoseTurn = (mWhoseTurn == piece_color::white ? piece_color::black : piece_color::white);
+  assert(this->CanDoMove(move));
+  m_board.DoMove(move);
+  m_whose_turn = (m_whose_turn == piece_color::white ? piece_color::black : piece_color::white);
 }
 
-void ChessGame::CoutGame() const
+void chess_game::CoutGame() const
 {
-  mBoard.CoutSight(mWhoseTurn);
+  m_board.CoutSight(m_whose_turn);
   std::cout
     << std::endl
-    << (mWhoseTurn == piece_color::white ? "White" : "Black")
+    << (m_whose_turn == piece_color::white ? "White" : "Black")
     << " player's turn"
     << std::endl;
 }
 
-void ChessGame::CoutBoard() const
+void chess_game::CoutBoard() const
 {
-  mBoard.CoutPieces(mWhoseTurn);
+  m_board.CoutPieces(m_whose_turn);
   std::cout
     << std::endl
-    << (mWhoseTurn == piece_color::white ? "White" : "Black")
+    << (m_whose_turn == piece_color::white ? "White" : "Black")
     << " player's turn"
     << std::endl;
 }
 
-bool ChessGame::IsGameOver() const
+bool chess_game::IsGameOver() const
 {
-  return mBoard.IsGameOver();
+  return m_board.IsGameOver();
 }
 
-piece_color ChessGame::GetWinner() const
+piece_color chess_game::GetWinner() const
 {
-  assert(this->IsGameOver()==true);
-  return mBoard.GetWinner();
+  assert(this->IsGameOver());
+  return m_board.GetWinner();
 }
 
-const std::vector<std::vector<bool> > ChessGame::GetInSight() const
+const std::vector<std::vector<bool> > chess_game::GetInSight() const
 {
-  return mBoard.GetInSight(mWhoseTurn);
+  return m_board.GetInSight(m_whose_turn);
 }
 
-ChessMove ChessGame::SuggestMove() const
+chess_move chess_game::SuggestMove() const
 {
   //Get all possible moves
-  std::vector<ChessMove> moves = mBoard.GetAllPossibleMoves(mWhoseTurn);
+  std::vector<chess_move> moves = m_board.GetAllPossibleMoves(m_whose_turn);
   std::random_shuffle(moves.begin(), moves.end() );
 
   const int nMoves = moves.size();
@@ -89,8 +90,8 @@ ChessMove ChessGame::SuggestMove() const
 
 }
 
-std::vector<double> ChessGame::AttributeValues(
-  const std::vector<ChessMove>& moves) const
+std::vector<double> chess_game::AttributeValues(
+  const std::vector<chess_move>& moves) const
 {
   const int nMoves = moves.size();
   std::vector<double> v(nMoves,0.0);
@@ -101,19 +102,19 @@ std::vector<double> ChessGame::AttributeValues(
   return v;
 }
 
-double ChessGame::AttributeValue(
-  const ChessMove& move) const
+double chess_game::AttributeValue(
+  const chess_move& move) const
 {
   double value = 0.0;
   const int y1 = move.y1;
   const int x1 = move.x1;
   const int y2 = move.y2;
   const int x2 = move.x2;
-  const ChessPiece piece = mBoard.GetPiece(x1,y1);
+  const chess_piece piece = m_board.GetPiece(x1,y1);
   assert(piece.IsNull()==false);
   //const piece_color color = piece.GetColor();
 
-  if (mBoard.GetPiece(x2,y2).IsNull()==false)
+  if (m_board.GetPiece(x2,y2).IsNull()==false)
   {
     //An expensive piece should not take a cheaper piece
     //The more expensive the piece to move,
@@ -126,7 +127,7 @@ double ChessGame::AttributeValue(
     if (piece.GetType()==pawn  ) { value-= 0.0; }
     //The more expensive the piece to take,
     //  the more motivated it will be to take it
-    const ChessPiece victim = mBoard.GetPiece(x2,y2);
+    const chess_piece victim = m_board.GetPiece(x2,y2);
     if (victim.GetType()==king  ) { value+=100000.0; }
     if (victim.GetType()==queen ) { value+=10.0; }
     if (victim.GetType()==rook  ) { value+= 5.0; }
@@ -142,23 +143,23 @@ double ChessGame::AttributeValue(
 //a2xb3
 //Na1 a8
 //Pc1xd5
-bool ChessGame::ParseMove(
+bool chess_game::ParseMove(
   const std::string& s,
-  ChessMove& move) const
+  chess_move& move) const
 {
-  if (s.empty()==true) return false;
+  if (s.empty()) return false;
   //Obtain chesstypes from the only upper case character at the first index
   //If there is no upper case, it is a pawn
   if (s=="o-o" || s=="O-O" || s == "0-0")
   {
     const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
-    move = ChessMove(king,4,y,false,6,y);
+    move = chess_move(king,4,y,false,6,y);
     return true;
   }
   if (s=="o-o-o" || s=="O-O-O" || s == "0-0-0")
   {
     const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
-    move = ChessMove(king,4,y,false,2,y);
+    move = chess_move(king,4,y,false,2,y);
     return true;
   }
 

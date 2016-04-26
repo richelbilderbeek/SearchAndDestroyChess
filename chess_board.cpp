@@ -2,29 +2,30 @@
 #include <stdexcept>
 #include <cassert>
 #include <iostream>
-#include "UnitChessPiece.h"
+#include "chess_piece.h"
 
 
-#include "UnitChessBoard.h"
+#include "chess_board.h"
 
-ChessBoard::ChessBoard()
-  : mPieces(GetInitialSetup())
+chess_board::chess_board()
+  : m_pieces(GetInitialSetup()),
+    m_moves{}
 {
 
 }
 
-const ChessPiece ChessBoard::GetPiece(const int x, const int y) const
+chess_piece chess_board::GetPiece(const int x, const int y) const
 {
-  return mPieces[y][x];
+  return m_pieces[y][x];
 }
 
-void ChessBoard::SetPiece(const ChessPiece& piece, const int x, const int y)
+void chess_board::SetPiece(const chess_piece& piece, const int x, const int y)
 {
-  mPieces[y][x] = piece;
+  m_pieces[y][x] = piece;
   assert(this->GetPiece(x,y) == piece);
 }
 
-bool ChessBoard::IsGameOver() const
+bool chess_board::IsGameOver() const
 {
   bool whiteHasKing = false;
   bool blackHasKing = false;
@@ -33,7 +34,7 @@ bool ChessBoard::IsGameOver() const
   {
     for (int x=0; x!=8; ++x)
     {
-      const ChessPiece piece = mPieces[y][x];
+      const chess_piece piece = m_pieces[y][x];
       if (piece.IsNull()==false && piece.GetType()==king)
       {
         if (piece.GetColor() == piece_color::white)
@@ -46,14 +47,14 @@ bool ChessBoard::IsGameOver() const
   return (whiteHasKing == false || blackHasKing == false);
 }
 
-piece_color ChessBoard::GetWinner() const
+piece_color chess_board::GetWinner() const
 {
-  assert(this->IsGameOver()==true);
+  assert(this->IsGameOver());
   for (int y=0; y!=8; ++y)
   {
     for (int x=0; x!=8; ++x)
     {
-      const ChessPiece piece = mPieces[y][x];
+      const chess_piece piece = m_pieces[y][x];
       if (piece.GetType()==king)
       {
         if (piece.GetColor() == piece_color::white)
@@ -67,17 +68,17 @@ piece_color ChessBoard::GetWinner() const
   throw std::logic_error("Cannot find winner");
 }
 
-bool ChessBoard::CanDoMove(const ChessMove& move) const
+bool chess_board::CanDoMove(const chess_move& move) const
 {
-  const ChessPiece piece = this->GetPiece(move.x1,move.y1);
+  const chess_piece piece = this->GetPiece(move.x1,move.y1);
   //Is there a chesspiece?
-  if (piece.IsNull()==true) return false;
+  if (piece.IsNull()) return false;
   //Is it of the right type?
   if (piece.GetType()!=move.type) return false;
   //Is it of the right color? ->Checked by ChessGame
   //Is the destination free or is there an enemy?
-  const ChessPiece destination = this->GetPiece(move.x2,move.y2);
-  if ( destination.IsNull()==true
+  const chess_piece destination = this->GetPiece(move.x2,move.y2);
+  if ( destination.IsNull()
     && move.capture == true) return false; //Free space && capture
   if ( destination.IsNull()==false)
   {
@@ -90,10 +91,10 @@ bool ChessBoard::CanDoMove(const ChessMove& move) const
   return this->IsValidMove(move);
 }
 
-void ChessBoard::DoMove(const ChessMove& move)
+void chess_board::DoMove(const chess_move& move)
 {
-  assert(this->CanDoMove(move)==true);
-  const ChessPiece piece = this->GetPiece(move.x1,move.y1);
+  assert(this->CanDoMove(move));
+  const chess_piece piece = this->GetPiece(move.x1,move.y1);
 
   if (piece.GetType()==king
     && move.x1 == 4
@@ -107,47 +108,47 @@ void ChessBoard::DoMove(const ChessMove& move)
     if (move.x2 == 2)
     {
       //Castling long
-      this->SetPiece(ChessPiece(color,king),2,y); //Move King
-      this->SetPiece(ChessPiece(color,rook),3,y); //Move rook
-      this->SetPiece(ChessPiece(),4,y);           //Erase old king
-      this->SetPiece(ChessPiece(),0,y);           //Erase old rook
+      this->SetPiece(chess_piece(color,king),2,y); //Move King
+      this->SetPiece(chess_piece(color,rook),3,y); //Move rook
+      this->SetPiece(chess_piece(),4,y);           //Erase old king
+      this->SetPiece(chess_piece(),0,y);           //Erase old rook
     }
     else
     {
       //Castling short
-      this->SetPiece(ChessPiece(color,king),6,y); //Move King
-      this->SetPiece(ChessPiece(color,rook),5,y); //Move rook
-      this->SetPiece(ChessPiece(),4,y);           //Erase old king
-      this->SetPiece(ChessPiece(),7,y);           //Erase old rook
+      this->SetPiece(chess_piece(color,king),6,y); //Move King
+      this->SetPiece(chess_piece(color,rook),5,y); //Move rook
+      this->SetPiece(chess_piece(),4,y);           //Erase old king
+      this->SetPiece(chess_piece(),7,y);           //Erase old rook
     }
   }
   else if (piece.GetType()==pawn
-    && this->GetPiece(move.x2,move.y2).IsNull()==true
+    && this->GetPiece(move.x2,move.y2).IsNull()
     && move.x1 != move.x2
     && move.y1 != move.y2)
   {
     //En passant
-    this->SetPiece(ChessPiece(piece.GetColor(),pawn),move.x2,move.y2); //Move pawn
-    this->SetPiece(ChessPiece(),move.x1,move.y1); //Erase old pawn
-    this->SetPiece(ChessPiece(),move.x2,move.y1); //Capture pawn
+    this->SetPiece(chess_piece(piece.GetColor(),pawn),move.x2,move.y2); //Move pawn
+    this->SetPiece(chess_piece(),move.x1,move.y1); //Erase old pawn
+    this->SetPiece(chess_piece(),move.x2,move.y1); //Capture pawn
   }
   else if (piece.GetType()==pawn
     && (move.y2 == 0 || move.y2 == 7) )
   {
     //Promotion to queen
-    this->SetPiece(ChessPiece(),move.x1,move.y1); //Overwrite old piece by NullType
-    this->SetPiece(ChessPiece(piece.GetColor(),queen),move.x2,move.y2);
+    this->SetPiece(chess_piece(),move.x1,move.y1); //Overwrite old piece by NullType
+    this->SetPiece(chess_piece(piece.GetColor(),queen),move.x2,move.y2);
   }
   else
   {
     //Regular move (i.e. non-castling)
-    this->SetPiece(ChessPiece(),move.x1,move.y1); //Overwrite old piece by NullType
+    this->SetPiece(chess_piece(),move.x1,move.y1); //Overwrite old piece by NullType
     this->SetPiece(piece,move.x2,move.y2);
   }
-  mMoves.push_back(move);
+  m_moves.push_back(move);
 }
 
-bool ChessBoard::CanDoCastlingShort(const piece_color color) const
+bool chess_board::CanDoCastlingShort(const piece_color color) const
 {
   //Determine the y
   const int y = (color == piece_color::white ? 0 : 7);
@@ -159,9 +160,9 @@ bool ChessBoard::CanDoCastlingShort(const piece_color color) const
   if(this->GetPiece(5,y).IsNull() == false) return false;
   if(this->GetPiece(6,y).IsNull() == false) return false;
 
-  typedef std::vector<ChessMove>::const_iterator Iter;
-  const Iter j = mMoves.end();
-  for (Iter i = mMoves.begin(); i!=j; ++i)
+  typedef std::vector<chess_move>::const_iterator Iter;
+  const Iter j = m_moves.end();
+  for (Iter i = m_moves.begin(); i!=j; ++i)
   {
     //Check if king has moved
     if ( (*i).type == king && (*i).y1 == y) return false;
@@ -171,7 +172,7 @@ bool ChessBoard::CanDoCastlingShort(const piece_color color) const
   return true;
 }
 
-bool ChessBoard::CanDoCastlingLong(const piece_color color) const
+bool chess_board::CanDoCastlingLong(const piece_color color) const
 {
   //Determine the y
   const int y = (color == piece_color::white ? 0 : 7);
@@ -184,9 +185,9 @@ bool ChessBoard::CanDoCastlingLong(const piece_color color) const
   if(this->GetPiece(2,y).IsNull() == false) return false;
   if(this->GetPiece(3,y).IsNull() == false) return false;
 
-  typedef std::vector<ChessMove>::const_iterator Iter;
-  const Iter j = mMoves.end();
-  for (Iter i = mMoves.begin(); i!=j; ++i)
+  typedef std::vector<chess_move>::const_iterator Iter;
+  const Iter j = m_moves.end();
+  for (Iter i = m_moves.begin(); i!=j; ++i)
   {
     //Check if king has moved
     if ( (*i).type == king && (*i).y1 == y) return false;
@@ -196,47 +197,47 @@ bool ChessBoard::CanDoCastlingLong(const piece_color color) const
   return true;
 }
 
-const std::vector<std::vector<ChessPiece> > ChessBoard::GetInitialSetup()
+const std::vector<std::vector<chess_piece> > chess_board::GetInitialSetup()
 {
-  std::vector<std::vector<ChessPiece> > v(8,std::vector<ChessPiece>(8));
+  std::vector<std::vector<chess_piece> > v(8,std::vector<chess_piece>(8));
   //v has [y][x] index
-  v[0][0] = ChessPiece(piece_color::white,rook  );
-  v[0][1] = ChessPiece(piece_color::white,knight);
-  v[0][2] = ChessPiece(piece_color::white,bishop);
-  v[0][3] = ChessPiece(piece_color::white,queen );
-  v[0][4] = ChessPiece(piece_color::white,king  );
-  v[0][5] = ChessPiece(piece_color::white,bishop);
-  v[0][6] = ChessPiece(piece_color::white,knight);
-  v[0][7] = ChessPiece(piece_color::white,rook  );
-  v[1][0] = ChessPiece(piece_color::white,pawn  );
-  v[1][1] = ChessPiece(piece_color::white,pawn  );
-  v[1][2] = ChessPiece(piece_color::white,pawn  );
-  v[1][3] = ChessPiece(piece_color::white,pawn  );
-  v[1][4] = ChessPiece(piece_color::white,pawn  );
-  v[1][5] = ChessPiece(piece_color::white,pawn  );
-  v[1][6] = ChessPiece(piece_color::white,pawn  );
-  v[1][7] = ChessPiece(piece_color::white,pawn  );
-  v[7][0] = ChessPiece(piece_color::black,rook  );
-  v[7][1] = ChessPiece(piece_color::black,knight);
-  v[7][2] = ChessPiece(piece_color::black,bishop);
-  v[7][3] = ChessPiece(piece_color::black,queen );
-  v[7][4] = ChessPiece(piece_color::black,king  );
-  v[7][5] = ChessPiece(piece_color::black,bishop);
-  v[7][6] = ChessPiece(piece_color::black,knight);
-  v[7][7] = ChessPiece(piece_color::black,rook  );
-  v[6][0] = ChessPiece(piece_color::black,pawn  );
-  v[6][1] = ChessPiece(piece_color::black,pawn  );
-  v[6][2] = ChessPiece(piece_color::black,pawn  );
-  v[6][3] = ChessPiece(piece_color::black,pawn  );
-  v[6][4] = ChessPiece(piece_color::black,pawn  );
-  v[6][5] = ChessPiece(piece_color::black,pawn  );
-  v[6][6] = ChessPiece(piece_color::black,pawn  );
-  v[6][7] = ChessPiece(piece_color::black,pawn  );
+  v[0][0] = chess_piece(piece_color::white,rook  );
+  v[0][1] = chess_piece(piece_color::white,knight);
+  v[0][2] = chess_piece(piece_color::white,bishop);
+  v[0][3] = chess_piece(piece_color::white,queen );
+  v[0][4] = chess_piece(piece_color::white,king  );
+  v[0][5] = chess_piece(piece_color::white,bishop);
+  v[0][6] = chess_piece(piece_color::white,knight);
+  v[0][7] = chess_piece(piece_color::white,rook  );
+  v[1][0] = chess_piece(piece_color::white,pawn  );
+  v[1][1] = chess_piece(piece_color::white,pawn  );
+  v[1][2] = chess_piece(piece_color::white,pawn  );
+  v[1][3] = chess_piece(piece_color::white,pawn  );
+  v[1][4] = chess_piece(piece_color::white,pawn  );
+  v[1][5] = chess_piece(piece_color::white,pawn  );
+  v[1][6] = chess_piece(piece_color::white,pawn  );
+  v[1][7] = chess_piece(piece_color::white,pawn  );
+  v[7][0] = chess_piece(piece_color::black,rook  );
+  v[7][1] = chess_piece(piece_color::black,knight);
+  v[7][2] = chess_piece(piece_color::black,bishop);
+  v[7][3] = chess_piece(piece_color::black,queen );
+  v[7][4] = chess_piece(piece_color::black,king  );
+  v[7][5] = chess_piece(piece_color::black,bishop);
+  v[7][6] = chess_piece(piece_color::black,knight);
+  v[7][7] = chess_piece(piece_color::black,rook  );
+  v[6][0] = chess_piece(piece_color::black,pawn  );
+  v[6][1] = chess_piece(piece_color::black,pawn  );
+  v[6][2] = chess_piece(piece_color::black,pawn  );
+  v[6][3] = chess_piece(piece_color::black,pawn  );
+  v[6][4] = chess_piece(piece_color::black,pawn  );
+  v[6][5] = chess_piece(piece_color::black,pawn  );
+  v[6][6] = chess_piece(piece_color::black,pawn  );
+  v[6][7] = chess_piece(piece_color::black,pawn  );
   return v;
 }
 
 //Color denotes the player who's turn it is, i.e. the player looking at the board
-void ChessBoard::CoutPieces(
+void chess_board::CoutPieces(
   const piece_color color) const
 {
   const int yBegin = (color == piece_color::black ? 0 : 7);
@@ -257,7 +258,7 @@ void ChessBoard::CoutPieces(
     std::cout << (y+1) << " ";
     for (int x=xBegin; x!=xEnd; x+=xStep)
     {
-      std::cout << "|" << mPieces[y][x];
+      std::cout << "|" << m_pieces[y][x];
     }
     std::cout << "| " << (y+1) << std::endl;
 
@@ -271,7 +272,7 @@ void ChessBoard::CoutPieces(
 }
 
 //Color denotes the player who's turn it is, i.e. the player looking at the board
-void ChessBoard::CoutSight(
+void chess_board::CoutSight(
   const piece_color color) const
 {
   //
@@ -295,7 +296,7 @@ void ChessBoard::CoutSight(
     std::cout << (y+1) << " ";
     for (int x=xBegin; x!=xEnd; x+=xStep)
     {
-      std::cout << "|" << (inSight[y][x]==true ? mPieces[y][x] : ChessPiece() );
+      std::cout << "|" << (inSight[y][x] ? m_pieces[y][x] : chess_piece() );
     }
     std::cout << "| " << (y+1) << std::endl;
 
@@ -309,24 +310,24 @@ void ChessBoard::CoutSight(
 
 }
 
-const std::vector<std::vector<bool> > ChessBoard::GetInSight(const piece_color color) const
+std::vector<std::vector<bool>> chess_board::GetInSight(const piece_color color) const
 {
-  std::vector<std::vector<bool> > inSight(8, std::vector<bool>(8,false));
+  std::vector<std::vector<bool>> inSight(8, std::vector<bool>(8,false));
 
   for (int y=0; y!=8; ++y)
   {
     for (int x=0; x!=8; ++x)
     {
       //Get the piece there
-      const ChessPiece piece = this->GetPiece(x,y);
+      const chess_piece piece = this->GetPiece(x,y);
       //Empty or occupied by enemy? Then continue
-      if (piece.IsNull()==true || piece.GetColor()!=color) continue;
+      if (piece.IsNull() || piece.GetColor()!=color) continue;
       //Occupied by this color
       inSight[y][x] = true;
       //Then get all its valid moves
-      const std::vector<ChessMove> moves = this->GetAllValidMoves(x,y);
-      const std::vector<ChessMove>::const_iterator j = moves.end();
-      for (std::vector<ChessMove>::const_iterator i = moves.begin(); i!=j; ++i)
+      const std::vector<chess_move> moves = this->GetAllValidMoves(x,y);
+      const std::vector<chess_move>::const_iterator j = moves.end();
+      for (std::vector<chess_move>::const_iterator i = moves.begin(); i!=j; ++i)
       {
         inSight[(*i).y2][(*i).x2] = true;
       }
@@ -338,29 +339,29 @@ const std::vector<std::vector<bool> > ChessBoard::GetInSight(const piece_color c
           //Always look a single square forward
           inSight[y+1][x] = true;
           //Look two squares forward, if the first is not occupied
-          if (y==1 && GetPiece(x,y+1).IsNull()==true)
+          if (y==1 && GetPiece(x,y+1).IsNull())
           {
             inSight[y+2][x] = true;
           }
           //Look sideways left
-          if (x > 0 && GetPiece(x-1,y+1).IsNull()==true)
+          if (x > 0 && GetPiece(x-1,y+1).IsNull())
           {
             inSight[y+1][x-1] = true;
           }
           //Look sideways right
-          if (x < 7 && GetPiece(x+1,y+1).IsNull()==true)
+          if (x < 7 && GetPiece(x+1,y+1).IsNull())
           {
             inSight[y+1][x+1] = true;
           }
           //Look sideways if en passant is possible
           if (y == 4                            //4th row
-            && this->mMoves.back().type == pawn //Black moved a pawn
-            && this->mMoves.back().y1 == 6      //Black moved two places
-            && this->mMoves.back().y2 == 4)     //Black moved two places
+            && this->m_moves.back().type == pawn //Black moved a pawn
+            && this->m_moves.back().y1 == 6      //Black moved two places
+            && this->m_moves.back().y2 == 4)     //Black moved two places
           {
-            if (this->mMoves.back().x1 == x-1)
+            if (this->m_moves.back().x1 == x-1)
               inSight[y][x-1] = true;
-            else if (this->mMoves.back().x1 == x+1)
+            else if (this->m_moves.back().x1 == x+1)
               inSight[y][x+1] = true;
           }
         }
@@ -369,29 +370,29 @@ const std::vector<std::vector<bool> > ChessBoard::GetInSight(const piece_color c
           //Always look a single square forward
           inSight[y-1][x] = true;
           //Look two squares forward, if the first is not occupied
-          if (y==6 && GetPiece(x,y-1).IsNull()==true)
+          if (y==6 && GetPiece(x,y-1).IsNull())
           {
             inSight[y-2][x] = true;
           }
           //Look sideways left
-          if (x > 0 && GetPiece(x-1,y-1).IsNull()==true)
+          if (x > 0 && GetPiece(x-1,y-1).IsNull())
           {
             inSight[y-1][x-1] = true;
           }
           //Look sideways right
-          if (x < 7 && GetPiece(x+1,y-1).IsNull()==true)
+          if (x < 7 && GetPiece(x+1,y-1).IsNull())
           {
             inSight[y-1][x+1] = true;
           }
           //Look sideways if en passant is possible
           if (y == 3                            //3rd row
-            && this->mMoves.back().type == pawn //White moved a pawn
-            && this->mMoves.back().y1 == 1      //White moved two places
-            && this->mMoves.back().y2 == 3)     //White moved two places
+            && this->m_moves.back().type == pawn //White moved a pawn
+            && this->m_moves.back().y1 == 1      //White moved two places
+            && this->m_moves.back().y2 == 3)     //White moved two places
           {
-            if (this->mMoves.back().x1 == x-1)
+            if (this->m_moves.back().x1 == x-1)
               inSight[y][x-1] = true;
-            else if (this->mMoves.back().x1 == x+1)
+            else if (this->m_moves.back().x1 == x+1)
               inSight[y][x+1] = true;
           }
         }
@@ -401,16 +402,16 @@ const std::vector<std::vector<bool> > ChessBoard::GetInSight(const piece_color c
   return inSight;
 }
 
-bool ChessBoard::IsValidMove(const ChessMove& move) const
+bool chess_board::IsValidMove(const chess_move& move) const
 {
-  const std::vector<ChessMove> moves = this->GetAllValidMoves(move.x1, move.y1);
+  const std::vector<chess_move> moves = this->GetAllValidMoves(move.x1, move.y1);
   return std::find(std::begin(moves),std::end(moves), move) != std::end(moves);
 }
 
-std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
+std::vector<chess_move> chess_board::GetAllPossibleMoves(
   const piece_color whoseTurn) const
 {
-  std::vector<ChessMove> allMoves;
+  std::vector<chess_move> allMoves;
   for (int y=0; y!=8; ++y)
   {
     for (int x=0; x!=8; ++x)
@@ -419,7 +420,7 @@ std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
        && this->GetPiece(x,y).GetColor()==whoseTurn)
       {
         //Get all valid moves of this player's piece here
-        const std::vector<ChessMove> thisPieceMoves = GetAllValidMoves(x,y);
+        const std::vector<chess_move> thisPieceMoves = GetAllValidMoves(x,y);
         //Append it to allMoves
         std::copy(
           thisPieceMoves.begin(),thisPieceMoves.end(),
@@ -430,10 +431,10 @@ std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
   return allMoves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMoves(
+std::vector<chess_move> chess_board::GetAllValidMoves(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   switch (piece.GetType())
   {
@@ -448,116 +449,116 @@ std::vector<ChessMove> ChessBoard::GetAllValidMoves(
   throw std::logic_error("Unknown piece_type");
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
+std::vector<chess_move> chess_board::GetAllValidMovesPawn(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == pawn);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
   if (piece.GetColor()==piece_color::white)
   {
     //Move single square forward
-    if (GetPiece(x,y+1).IsNull()==true)
+    if (GetPiece(x,y+1).IsNull())
     {
-      moves.push_back(ChessMove(pawn,x,y,false,x,y+1));
+      moves.push_back(chess_move(pawn,x,y,false,x,y+1));
     }
     //Move two squares forward
     if (y==1
-      && GetPiece(x,y+1).IsNull()==true
-      && GetPiece(x,y+2).IsNull()==true)
+      && GetPiece(x,y+1).IsNull()
+      && GetPiece(x,y+2).IsNull())
     {
-      moves.push_back(ChessMove(pawn,x,y,false,x,y+2));
+      moves.push_back(chess_move(pawn,x,y,false,x,y+2));
     }
     //Capture left
     if (x > 0
       && GetPiece(x-1,y+1).IsNull()==false
       && GetPiece(x-1,y+1).GetColor()==piece_color::black)
     {
-      moves.push_back(ChessMove(pawn,x,y,true,x-1,y+1));
+      moves.push_back(chess_move(pawn,x,y,true,x-1,y+1));
     }
     //Capture right
     if (x < 7
       && GetPiece(x+1,y+1).IsNull()==false
       && GetPiece(x+1,y+1).GetColor()==piece_color::black)
     {
-      moves.push_back(ChessMove(pawn,x,y,true,x+1,y+1));
+      moves.push_back(chess_move(pawn,x,y,true,x+1,y+1));
     }
     //En passant
     if (y == 4
-      && mMoves.back().y1 == 6 //Black had moved two squares
-      && mMoves.back().y2 == 4)
+      && m_moves.back().y1 == 6 //Black had moved two squares
+      && m_moves.back().y2 == 4)
     {
-      if (mMoves.back().x1 == x - 1) //To the left
+      if (m_moves.back().x1 == x - 1) //To the left
       {
         //Note: En passant is not regarded as a capture, as the spot moved to is empty
-        moves.push_back(ChessMove(pawn,x,y, false /* note */ ,x-1,y+1));
+        moves.push_back(chess_move(pawn,x,y, false /* note */ ,x-1,y+1));
       }
-      else if (mMoves.back().x1 == x + 1) //To the right
+      else if (m_moves.back().x1 == x + 1) //To the right
       {
         //Note: En passant is not regarded as a capture, as the spot moved to is empty
-        moves.push_back(ChessMove(pawn,x,y,false /* note */,x+1,y+1));
+        moves.push_back(chess_move(pawn,x,y,false /* note */,x+1,y+1));
       }
     }
   }
   else
   {
     //Move single square forward
-    if (GetPiece(x,y-1).IsNull()==true)
+    if (GetPiece(x,y-1).IsNull())
     {
-      moves.push_back(ChessMove(pawn,x,y,false,x,y-1));
+      moves.push_back(chess_move(pawn,x,y,false,x,y-1));
     }
     //Move two squares forward
     if (y==6
-      && GetPiece(x,y-1).IsNull()==true
-      && GetPiece(x,y-2).IsNull()==true)
+      && GetPiece(x,y-1).IsNull()
+      && GetPiece(x,y-2).IsNull())
     {
-      moves.push_back(ChessMove(pawn,x,y,false,x,y-2));
+      moves.push_back(chess_move(pawn,x,y,false,x,y-2));
     }
     //Capture left
     if (x > 0
       && GetPiece(x-1,y-1).IsNull()==false
       && GetPiece(x-1,y-1).GetColor()==piece_color::white)
     {
-      moves.push_back(ChessMove(pawn,x,y,true,x-1,y-1));
+      moves.push_back(chess_move(pawn,x,y,true,x-1,y-1));
     }
     //Capture right
     if (x < 7
       && GetPiece(x+1,y-1).IsNull()==false
       && GetPiece(x+1,y-1).GetColor()==piece_color::white)
     {
-      moves.push_back(ChessMove(pawn,x,y,true,x+1,y-1));
+      moves.push_back(chess_move(pawn,x,y,true,x+1,y-1));
     }
     //En passant
     if (y == 3
-      && mMoves.back().y1 == 1  //White had moved two squares
-      && mMoves.back().y2 == 3)
+      && m_moves.back().y1 == 1  //White had moved two squares
+      && m_moves.back().y2 == 3)
     {
-      if (mMoves.back().x1 == x - 1) //To the left
+      if (m_moves.back().x1 == x - 1) //To the left
       {
         //Note: En passant is not regarded as a capture, as the spot moved to is empty
-        moves.push_back(ChessMove(pawn,x,y, false /* note */ ,x-1,y-1));
+        moves.push_back(chess_move(pawn,x,y, false /* note */ ,x-1,y-1));
       }
-      else if (mMoves.back().x1 == x + 1) //To the right
+      else if (m_moves.back().x1 == x + 1) //To the right
       {
         //Note: En passant is not regarded as a capture, as the spot moved to is empty
-        moves.push_back(ChessMove(pawn,x,y,false /* note */,x+1,y-1));
+        moves.push_back(chess_move(pawn,x,y,false /* note */,x+1,y-1));
       }
     }
   }
   return moves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
+std::vector<chess_move> chess_board::GetAllValidMovesKnight(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == knight);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
   //-2 -1
   if (x > 1 && y > 0)
@@ -565,11 +566,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x-2,y-1).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x-2,y-1)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x-2,y-1)); //No capture
     }
     else if (GetPiece(x-2,y-1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x-2,y-1)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x-2,y-1)); //Capture of enemy
     }
   }
   //-1 -2
@@ -578,11 +579,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x-1,y-2).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x-1,y-2)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x-1,y-2)); //No capture
     }
     else if (GetPiece(x-1,y-2).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x-1,y-2)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x-1,y-2)); //Capture of enemy
     }
   }
   //+2 -1
@@ -591,11 +592,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x+2,y-1).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x+2,y-1)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x+2,y-1)); //No capture
     }
     else if (GetPiece(x+2,y-1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x+2,y-1)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x+2,y-1)); //Capture of enemy
     }
   }
   //-1 +2
@@ -604,11 +605,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x-1,y+2).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x-1,y+2)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x-1,y+2)); //No capture
     }
     else if (GetPiece(x-1,y+2).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x-1,y+2)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x-1,y+2)); //Capture of enemy
     }
   }
   //-2 +1
@@ -617,11 +618,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x-2,y+1).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x-2,y+1)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x-2,y+1)); //No capture
     }
     else if (GetPiece(x-2,y+1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x-2,y+1)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x-2,y+1)); //Capture of enemy
     }
   }
   //+1 -2
@@ -630,11 +631,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x+1,y-2).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x+1,y-2)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x+1,y-2)); //No capture
     }
     else if (GetPiece(x+1,y-2).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x+1,y-2)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x+1,y-2)); //Capture of enemy
     }
   }
 
@@ -644,11 +645,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x+2,y+1).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x+2,y+1)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x+2,y+1)); //No capture
     }
     else if (GetPiece(x+2,y+1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x+2,y+1)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x+2,y+1)); //Capture of enemy
     }
   }
   //+1 +2
@@ -657,25 +658,25 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
     //Is it a capture?
     if (GetPiece(x+1,y+2).IsNull() == true)
     {
-      moves.push_back(ChessMove(knight,x,y,false,x+1,y+2)); //No capture
+      moves.push_back(chess_move(knight,x,y,false,x+1,y+2)); //No capture
     }
     else if (GetPiece(x+1,y+2).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(knight,x,y,true,x+1,y+2)); //Capture of enemy
+      moves.push_back(chess_move(knight,x,y,true,x+1,y+2)); //Capture of enemy
     }
   }
 
   return moves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
+std::vector<chess_move> chess_board::GetAllValidMovesBishop(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == bishop);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
   //+x +x
   for (int i=1; x+i<8 && y+i<8; ++i)
@@ -683,11 +684,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
     //Is it a capture
     if (GetPiece(x+i,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(bishop,x,y,false,x+i,y+i)); //No capture
+      moves.push_back(chess_move(bishop,x,y,false,x+i,y+i)); //No capture
     }
     else if (GetPiece(x+i,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(bishop,x,y,true,x+i,y+i)); //Capture of enemy
+      moves.push_back(chess_move(bishop,x,y,true,x+i,y+i)); //Capture of enemy
       break;
     }
     else
@@ -702,11 +703,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
     //Is it a capture
     if (GetPiece(x-i,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(bishop,x,y,false,x-i,y+i)); //No capture
+      moves.push_back(chess_move(bishop,x,y,false,x-i,y+i)); //No capture
     }
     else if (GetPiece(x-i,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(bishop,x,y,true,x-i,y+i)); //Capture of enemy
+      moves.push_back(chess_move(bishop,x,y,true,x-i,y+i)); //Capture of enemy
       break;
     }
     else
@@ -721,11 +722,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
     //Is it a capture
     if (GetPiece(x+i,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(bishop,x,y,false,x+i,y-i)); //No capture
+      moves.push_back(chess_move(bishop,x,y,false,x+i,y-i)); //No capture
     }
     else if (GetPiece(x+i,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(bishop,x,y,true,x+i,y-i)); //Capture of enemy
+      moves.push_back(chess_move(bishop,x,y,true,x+i,y-i)); //Capture of enemy
       break;
     }
     else
@@ -740,11 +741,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
     //Is it a capture
     if (GetPiece(x-i,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(bishop,x,y,false,x-i,y-i)); //No capture
+      moves.push_back(chess_move(bishop,x,y,false,x-i,y-i)); //No capture
     }
     else if (GetPiece(x-i,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(bishop,x,y,true,x-i,y-i)); //Capture of enemy
+      moves.push_back(chess_move(bishop,x,y,true,x-i,y-i)); //Capture of enemy
       break;
     }
     else
@@ -756,14 +757,14 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
   return moves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
+std::vector<chess_move> chess_board::GetAllValidMovesRook(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == rook);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
   //+x +0
   for (int i=1; x+i<8; ++i)
@@ -771,11 +772,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
     //Is it a capture
     if (GetPiece(x+i,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(rook,x,y,false,x+i,y+0)); //No capture
+      moves.push_back(chess_move(rook,x,y,false,x+i,y+0)); //No capture
     }
     else if (GetPiece(x+i,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(rook,x,y,true,x+i,y+0)); //Capture of enemy
+      moves.push_back(chess_move(rook,x,y,true,x+i,y+0)); //Capture of enemy
       break;
     }
     else
@@ -789,11 +790,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
     //Is it a capture
     if (GetPiece(x-i,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(rook,x,y,false,x-i,y+0)); //No capture
+      moves.push_back(chess_move(rook,x,y,false,x-i,y+0)); //No capture
     }
     else if (GetPiece(x-i,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(rook,x,y,true,x-i,y+0)); //Capture of enemy
+      moves.push_back(chess_move(rook,x,y,true,x-i,y+0)); //Capture of enemy
       break;
     }
     else
@@ -808,11 +809,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
     //Is it a capture
     if (GetPiece(x+0,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(rook,x,y,false,x+0,y+i)); //No capture
+      moves.push_back(chess_move(rook,x,y,false,x+0,y+i)); //No capture
     }
     else if (GetPiece(x+0,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(rook,x,y,true,x+0,y+i)); //Capture of enemy
+      moves.push_back(chess_move(rook,x,y,true,x+0,y+i)); //Capture of enemy
       break;
     }
     else
@@ -827,11 +828,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
     //Is it a capture
     if (GetPiece(x-0,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(rook,x,y,false,x-0,y-i)); //No capture
+      moves.push_back(chess_move(rook,x,y,false,x-0,y-i)); //No capture
     }
     else if (GetPiece(x-0,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(rook,x,y,true,x-0,y-i)); //Capture of enemy
+      moves.push_back(chess_move(rook,x,y,true,x-0,y-i)); //Capture of enemy
       break;
     }
     else
@@ -843,14 +844,14 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
   return moves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
+std::vector<chess_move> chess_board::GetAllValidMovesQueen(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == queen);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
 
   //+x +x
@@ -859,11 +860,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x+i,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x+i,y+i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x+i,y+i)); //No capture
     }
     else if (GetPiece(x+i,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x+i,y+i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x+i,y+i)); //Capture of enemy
       break;
     }
     else
@@ -878,11 +879,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x-i,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x-i,y+i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x-i,y+i)); //No capture
     }
     else if (GetPiece(x-i,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x-i,y+i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x-i,y+i)); //Capture of enemy
       break;
     }
     else
@@ -897,11 +898,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x+i,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x+i,y-i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x+i,y-i)); //No capture
     }
     else if (GetPiece(x+i,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x+i,y-i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x+i,y-i)); //Capture of enemy
       break;
     }
     else
@@ -916,11 +917,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x-i,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x-i,y-i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x-i,y-i)); //No capture
     }
     else if (GetPiece(x-i,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x-i,y-i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x-i,y-i)); //Capture of enemy
       break;
     }
     else
@@ -935,11 +936,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x+i,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x+i,y+0)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x+i,y+0)); //No capture
     }
     else if (GetPiece(x+i,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x+i,y+0)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x+i,y+0)); //Capture of enemy
       break;
     }
     else
@@ -953,11 +954,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x-i,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x-i,y+0)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x-i,y+0)); //No capture
     }
     else if (GetPiece(x-i,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x-i,y+0)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x-i,y+0)); //Capture of enemy
       break;
     }
     else
@@ -972,11 +973,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x+0,y+i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x+0,y+i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x+0,y+i)); //No capture
     }
     else if (GetPiece(x+0,y+i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x+0,y+i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x+0,y+i)); //Capture of enemy
       break;
     }
     else
@@ -991,11 +992,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
     //Is it a capture
     if (GetPiece(x-0,y-i).IsNull() == true)
     {
-      moves.push_back(ChessMove(queen,x,y,false,x-0,y-i)); //No capture
+      moves.push_back(chess_move(queen,x,y,false,x-0,y-i)); //No capture
     }
     else if (GetPiece(x-0,y-i).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(queen,x,y,true,x-0,y-i)); //Capture of enemy
+      moves.push_back(chess_move(queen,x,y,true,x-0,y-i)); //Capture of enemy
       break;
     }
     else
@@ -1007,14 +1008,14 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
   return moves;
 }
 
-std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
+std::vector<chess_move> chess_board::GetAllValidMovesKing(
   const int x, const int y) const
 {
-  const ChessPiece piece = GetPiece(x,y);
+  const chess_piece piece = GetPiece(x,y);
   assert(piece.IsNull()==false);
   assert(piece.GetType() == king);
 
-  std::vector<ChessMove> moves;
+  std::vector<chess_move> moves;
 
   //+0 -1
   if (y > 0)
@@ -1022,11 +1023,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x+0,y-1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x+0,y-1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x+0,y-1)); //No capture
     }
     else if (GetPiece(x+0,y-1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x+0,y-1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x+0,y-1)); //Capture of enemy
     }
   }
   //-1 -1
@@ -1035,11 +1036,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x-1,y-1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x-1,y-1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x-1,y-1)); //No capture
     }
     else if (GetPiece(x-1,y-1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x-1,y-1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x-1,y-1)); //Capture of enemy
     }
   }
   //+1 -1
@@ -1048,11 +1049,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x+1,y-1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x+1,y-1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x+1,y-1)); //No capture
     }
     else if (GetPiece(x+1,y-1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x+1,y-1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x+1,y-1)); //Capture of enemy
     }
   }
 
@@ -1063,11 +1064,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x+0,y+1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x+0,y+1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x+0,y+1)); //No capture
     }
     else if (GetPiece(x+0,y+1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x+0,y+1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x+0,y+1)); //Capture of enemy
     }
   }
   //-1 +1
@@ -1076,11 +1077,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x-1,y+1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x-1,y+1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x-1,y+1)); //No capture
     }
     else if (GetPiece(x-1,y+1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x-1,y+1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x-1,y+1)); //Capture of enemy
     }
   }
   //+1 +1
@@ -1089,11 +1090,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x+1,y+1).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x+1,y+1)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x+1,y+1)); //No capture
     }
     else if (GetPiece(x+1,y+1).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x+1,y+1)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x+1,y+1)); //Capture of enemy
     }
   }
 
@@ -1104,11 +1105,11 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x-1,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x-1,y+0)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x-1,y+0)); //No capture
     }
     else if (GetPiece(x-1,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x-1,y+0)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x-1,y+0)); //Capture of enemy
     }
   }
   //+1 +1
@@ -1117,19 +1118,19 @@ std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
     //Is it a capture
     if (GetPiece(x+1,y+0).IsNull() == true)
     {
-      moves.push_back(ChessMove(king,x,y,false,x+1,y+0)); //No capture
+      moves.push_back(chess_move(king,x,y,false,x+1,y+0)); //No capture
     }
     else if (GetPiece(x+1,y+0).GetColor() != piece.GetColor())
     { //Is it an enemy?
-      moves.push_back(ChessMove(king,x,y,true,x+1,y+0)); //Capture of enemy
+      moves.push_back(chess_move(king,x,y,true,x+1,y+0)); //Capture of enemy
     }
   }
 
   //Can do castling?
   if (this->CanDoCastlingLong(piece.GetColor()))
-    moves.push_back(ChessMove(king,x,y,false,x-2,y));
+    moves.push_back(chess_move(king,x,y,false,x-2,y));
   if (this->CanDoCastlingShort(piece.GetColor()))
-    moves.push_back(ChessMove(king,x,y,false,x+2,y));
+    moves.push_back(chess_move(king,x,y,false,x+2,y));
 
   return moves;
 }

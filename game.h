@@ -1,62 +1,42 @@
-
-/*
-  SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
-  Copyright (C) 2008  Richel Bilderbeek
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-// From http://www.richelbilderbeek.nl
-
 #ifndef UnitChessGameH
 #define UnitChessGameH
 
 #include "piece_color.h"
 #include "piece_type.h"
-#include "UnitChessBoard.h"
-#include "UnitChessMove.h"
+#include "chess_board.h"
+#include "chess_move.h"
 
 //Manages the correct use of ChessBoard
-struct ChessGame
+struct chess_game
 {
-  ChessGame();
+  chess_game();
 
-  bool CanDoMove(const ChessMove& move) const;
-  void DoMove(const ChessMove& move);
+  bool CanDoMove(const chess_move& move) const;
+  void DoMove(const chess_move& move);
 
-  ChessMove SuggestMove() const;
+  chess_move SuggestMove() const;
 
   void CoutGame() const;
   void CoutBoard() const;
 
-  const ChessBoard& GetBoard() const { return mBoard; }
-  piece_color GetWhoseTurn() const { return mWhoseTurn; }
+  const chess_board& GetBoard() const { return m_board; }
+  piece_color GetWhoseTurn() const { return m_whose_turn; }
 
-  const std::vector<std::vector<bool> > GetInSight() const;
+  const std::vector<std::vector<bool>> GetInSight() const;
 
   bool IsGameOver() const;
   piece_color GetWinner() const;
 
-  bool ParseMove(const std::string& s,ChessMove& move) const;
+  bool ParseMove(const std::string& s,chess_move& move) const;
 
   private:
-  ChessBoard mBoard;
-  piece_color mWhoseTurn;
+  chess_board m_board;
+  piece_color m_whose_turn;
 
   std::vector<double> AttributeValues(
-    const std::vector<ChessMove>& moves) const;
+    const std::vector<chess_move>& moves) const;
   double AttributeValue(
-    const ChessMove& move) const;
+    const chess_move& move) const;
 };
 
 

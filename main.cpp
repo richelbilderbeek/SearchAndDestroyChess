@@ -37,6 +37,12 @@ int main()
           break;
       }
     }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+      const sf::Vector2i p = sf::Mouse::getPosition(window);
+      g.click_mouse(p.x, p.y);
+    }
+    // get global mouse position
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) g.add_command(command::up);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) g.add_command(command::right);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) g.add_command(command::down);
@@ -48,10 +54,9 @@ int main()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) g.add_command(command::down);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) g.add_command(command::left);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) g.add_command(command::select);
-    if (clock.getElapsedTime().asMilliseconds() < 200) continue;
+    if (clock.getElapsedTime().asMilliseconds() < 100) continue;
     clock.restart();
     g.tick();
-
     window.clear();
     g.draw(window);
     window.display();

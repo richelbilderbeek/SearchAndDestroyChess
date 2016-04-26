@@ -1,11 +1,11 @@
-#ifndef UnitChessMoveH
-#define UnitChessMoveH
+#ifndef chess_moveH
+#define chess_moveH
 
 #include "piece_type.h"
 
-struct ChessMove
+struct chess_move
 {
-  ChessMove(
+  chess_move(
     const piece_type anyType = king,
     const int anyX1 = 0,
     const int anyY1 = 0,
@@ -29,5 +29,5 @@ struct ChessMove
   int y2;
 };
 
-bool operator==(const ChessMove& lhs, const ChessMove& rhs);
+bool operator==(const chess_move& lhs, const chess_move& rhs);
 #endif

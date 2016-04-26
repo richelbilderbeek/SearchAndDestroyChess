@@ -1,6 +1,6 @@
-#include "UnitChessMove.h"
+#include "chess_move.h"
 
-bool operator==(const ChessMove& lhs, const ChessMove& rhs)
+bool operator==(const chess_move& lhs, const chess_move& rhs)
 {
   return (lhs.type == rhs.type
     && lhs.x1      == rhs.x1

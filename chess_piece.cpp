@@ -1,9 +1,9 @@
 #include <iostream>
-#include "UnitChessPiece.h"
+#include "chess_piece.h"
 
-std::ostream& operator<<(std::ostream& os, const ChessPiece& piece)
+std::ostream& operator<<(std::ostream& os, const chess_piece& piece)
 {
-  if (piece.IsNull()==true)
+  if (piece.IsNull())
   {
     os << "  ";
   }
@@ -14,7 +14,7 @@ std::ostream& operator<<(std::ostream& os, const ChessPiece& piece)
   return os;
 }
 
-bool operator==(const ChessPiece& lhs, const ChessPiece& rhs)
+bool operator==(const chess_piece& lhs, const chess_piece& rhs)
 {
   return (lhs.GetType() == rhs.GetType()
     && lhs.GetColor() == rhs.GetColor()

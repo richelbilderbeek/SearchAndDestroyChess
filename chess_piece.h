@@ -18,19 +18,19 @@
 
 // From http://www.richelbilderbeek.nl
 
-#ifndef UnitChessPieceH
-#define UnitChessPieceH
+#ifndef chess_pieceH
+#define chess_pieceH
 
 #include <iosfwd>
 #include "piece_type.h"
 #include "piece_color.h"
 
 //Read-only
-struct ChessPiece
+struct chess_piece
 {
-  ChessPiece()
+  chess_piece()
     : mColor(piece_color::white), mType(pawn), mIsNull(true) {}
-  ChessPiece(
+  chess_piece(
     const piece_color color,
     const piece_type type)
     : mColor(color), mType(type), mIsNull(false) {}
@@ -45,7 +45,7 @@ struct ChessPiece
     bool mIsNull;
 };
 
-bool operator==(const ChessPiece& lhs, const ChessPiece& rhs);
-std::ostream& operator<<(std::ostream& os, const ChessPiece& piece);
+bool operator==(const chess_piece& lhs, const chess_piece& rhs);
+std::ostream& operator<<(std::ostream& os, const chess_piece& piece);
 
 #endif
