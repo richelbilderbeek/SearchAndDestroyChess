@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+
 /*
   SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
   Copyright (C) 2008  Richel Bilderbeek
@@ -15,14 +15,14 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//---------------------------------------------------------------------------
+
 // From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
+
 #ifndef UnitEnumChessPieceTypeH
 #define UnitEnumChessPieceTypeH
-//---------------------------------------------------------------------------
+
 #include <iosfwd>
-//---------------------------------------------------------------------------
+
 enum EnumChessPieceType
 {
   pawn,
@@ -32,8 +32,8 @@ enum EnumChessPieceType
   queen,
   king
 };
-//---------------------------------------------------------------------------
+
 std::ostream& operator<<(std::ostream& os, const EnumChessPieceType& type);
-//---------------------------------------------------------------------------
+
 #endif
  

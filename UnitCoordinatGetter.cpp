@@ -1,11 +1,6 @@
-//---------------------------------------------------------------------------
-
-
-#pragma hdrstop
-
 #include "UnitCoordinatGetter.h"
-//---------------------------------------------------------------------------
-const int CoordinatGetter::GetX(const int x) const
+
+int CoordinatGetter::GetX(const int x) const
 {
   if (mColor == white)
   {
@@ -16,8 +11,8 @@ const int CoordinatGetter::GetX(const int x) const
     return 7 - x;
   }
 }
-//---------------------------------------------------------------------------
-const int CoordinatGetter::GetY(const int y) const
+
+int CoordinatGetter::GetY(const int y) const
 {
   if (mColor == white)
   {
@@ -28,5 +23,5 @@ const int CoordinatGetter::GetY(const int y) const
     return y;
   }
 }
-//---------------------------------------------------------------------------
-#pragma package(smart_init)
+
+

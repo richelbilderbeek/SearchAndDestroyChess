@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+
 /*
   SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
   Copyright (C) 2008  Richel Bilderbeek
@@ -15,16 +15,16 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//---------------------------------------------------------------------------
+
 // From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
+
 #include <iostream>
 #include <cassert>
 #include <stdexcept>
-#pragma hdrstop
+
 
 #include "UnitEnumChessPieceType.h"
-//---------------------------------------------------------------------------
+
 std::ostream& operator<<(std::ostream& os, const EnumChessPieceType& type)
 {
   switch (type)
@@ -39,5 +39,5 @@ std::ostream& operator<<(std::ostream& os, const EnumChessPieceType& type)
   assert(!"Should not get here");
   throw std::logic_error("Unknown color");
 }
-//---------------------------------------------------------------------------
-#pragma package(smart_init)
+
+

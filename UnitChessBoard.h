@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+
 /*
   SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
   Copyright (C) 2008  Richel Bilderbeek
@@ -15,18 +15,18 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//---------------------------------------------------------------------------
+
 // From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
+
 #ifndef UnitChessBoardH
 #define UnitChessBoardH
-//---------------------------------------------------------------------------
+
 #include <iosfwd>
 #include <vector>
 #include "UnitEnumChessPieceColor.h"
 #include "UnitChessMove.h"
-struct ChessPiece;
-//---------------------------------------------------------------------------
+#include "UnitChessPiece.h"
+
 //ChessBoard manages the position of the pieces
 //It does not know whose turn it is (ChessGame does)
 struct ChessBoard
@@ -37,20 +37,20 @@ struct ChessBoard
 
   const Board& GetPieces() const { return mPieces; }
 
-  const bool CanDoMove(const ChessMove& move) const;
+  bool CanDoMove(const ChessMove& move) const;
   void DoMove(const ChessMove& move);
   const ChessPiece GetPiece(const int x, const int y) const;
 
   const std::vector<std::vector<bool> > GetInSight(const EnumChessPieceColor color) const;
 
-  const std::vector<ChessMove> GetAllValidMoves(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllPossibleMoves(const EnumChessPieceColor whoseTurn) const;
+  std::vector<ChessMove> GetAllValidMoves(const int x, const int y) const;
+  std::vector<ChessMove> GetAllPossibleMoves(const EnumChessPieceColor whoseTurn) const;
 
   void CoutPieces(const EnumChessPieceColor color) const;
   void CoutSight(const EnumChessPieceColor color) const;
 
-  const bool IsGameOver() const;
-  const EnumChessPieceColor GetWinner() const;
+  bool IsGameOver() const;
+  EnumChessPieceColor GetWinner() const;
 
   private:
 
@@ -61,17 +61,17 @@ struct ChessBoard
 
   const std::vector<std::vector<ChessPiece> > GetInitialSetup();
 
-  const bool IsValidMove(const ChessMove& move) const;
+  bool IsValidMove(const ChessMove& move) const;
 
-  const std::vector<ChessMove> GetAllValidMovesPawn(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllValidMovesKnight(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllValidMovesBishop(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllValidMovesRook(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllValidMovesQueen(const int x, const int y) const;
-  const std::vector<ChessMove> GetAllValidMovesKing(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesPawn(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesKnight(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesBishop(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesRook(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesQueen(const int x, const int y) const;
+  std::vector<ChessMove> GetAllValidMovesKing(const int x, const int y) const;
 
-  const bool CanDoCastlingShort(const EnumChessPieceColor color) const;
-  const bool CanDoCastlingLong(const EnumChessPieceColor color) const;
+  bool CanDoCastlingShort(const EnumChessPieceColor color) const;
+  bool CanDoCastlingLong(const EnumChessPieceColor color) const;
 };
-//---------------------------------------------------------------------------
+
 #endif

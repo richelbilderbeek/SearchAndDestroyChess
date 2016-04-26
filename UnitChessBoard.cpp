@@ -1,49 +1,30 @@
-//---------------------------------------------------------------------------
-/*
-  SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
-  Copyright (C) 2008  Richel Bilderbeek
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-//---------------------------------------------------------------------------
-// From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
+#include <algorithm>
 #include <stdexcept>
 #include <cassert>
 #include <iostream>
 #include "UnitChessPiece.h"
-#pragma hdrstop
+
 
 #include "UnitChessBoard.h"
-//---------------------------------------------------------------------------
+
 ChessBoard::ChessBoard()
   : mPieces(GetInitialSetup())
 {
 
 }
-//---------------------------------------------------------------------------
+
 const ChessPiece ChessBoard::GetPiece(const int x, const int y) const
 {
   return mPieces[y][x];
 }
-//---------------------------------------------------------------------------
+
 void ChessBoard::SetPiece(const ChessPiece& piece, const int x, const int y)
 {
   mPieces[y][x] = piece;
   assert(this->GetPiece(x,y) == piece);
 }
-//---------------------------------------------------------------------------
-const bool ChessBoard::IsGameOver() const
+
+bool ChessBoard::IsGameOver() const
 {
   bool whiteHasKing = false;
   bool blackHasKing = false;
@@ -64,8 +45,8 @@ const bool ChessBoard::IsGameOver() const
   }
   return (whiteHasKing == false || blackHasKing == false);
 }
-//---------------------------------------------------------------------------
-const EnumChessPieceColor ChessBoard::GetWinner() const
+
+EnumChessPieceColor ChessBoard::GetWinner() const
 {
   assert(this->IsGameOver()==true);
   for (int y=0; y!=8; ++y)
@@ -85,8 +66,8 @@ const EnumChessPieceColor ChessBoard::GetWinner() const
   assert(!"Should not get here");
   throw std::logic_error("Cannot find winner");
 }
-//---------------------------------------------------------------------------
-const bool ChessBoard::CanDoMove(const ChessMove& move) const
+
+bool ChessBoard::CanDoMove(const ChessMove& move) const
 {
   const ChessPiece piece = this->GetPiece(move.x1,move.y1);
   //Is there a chesspiece?
@@ -108,7 +89,7 @@ const bool ChessBoard::CanDoMove(const ChessMove& move) const
   }
   return this->IsValidMove(move);
 }
-//---------------------------------------------------------------------------
+
 void ChessBoard::DoMove(const ChessMove& move)
 {
   assert(this->CanDoMove(move)==true);
@@ -165,8 +146,8 @@ void ChessBoard::DoMove(const ChessMove& move)
   }
   mMoves.push_back(move);
 }
-//---------------------------------------------------------------------------
-const bool ChessBoard::CanDoCastlingShort(const EnumChessPieceColor color) const
+
+bool ChessBoard::CanDoCastlingShort(const EnumChessPieceColor color) const
 {
   //Determine the y
   const int y = (color == white ? 0 : 7);
@@ -189,8 +170,8 @@ const bool ChessBoard::CanDoCastlingShort(const EnumChessPieceColor color) const
   }
   return true;
 }
-//---------------------------------------------------------------------------
-const bool ChessBoard::CanDoCastlingLong(const EnumChessPieceColor color) const
+
+bool ChessBoard::CanDoCastlingLong(const EnumChessPieceColor color) const
 {
   //Determine the y
   const int y = (color == white ? 0 : 7);
@@ -214,7 +195,7 @@ const bool ChessBoard::CanDoCastlingLong(const EnumChessPieceColor color) const
   }
   return true;
 }
-//---------------------------------------------------------------------------
+
 const std::vector<std::vector<ChessPiece> > ChessBoard::GetInitialSetup()
 {
   std::vector<std::vector<ChessPiece> > v(8,std::vector<ChessPiece>(8));
@@ -253,7 +234,7 @@ const std::vector<std::vector<ChessPiece> > ChessBoard::GetInitialSetup()
   v[6][7] = ChessPiece(black,pawn  );
   return v;
 }
-//---------------------------------------------------------------------------
+
 //Color denotes the player who's turn it is, i.e. the player looking at the board
 void ChessBoard::CoutPieces(
   const EnumChessPieceColor color) const
@@ -288,7 +269,7 @@ void ChessBoard::CoutPieces(
     std::cout << "   H  G  F  E  D  C  B  A " << std::endl;
 
 }
-//---------------------------------------------------------------------------
+
 //Color denotes the player who's turn it is, i.e. the player looking at the board
 void ChessBoard::CoutSight(
   const EnumChessPieceColor color) const
@@ -327,7 +308,7 @@ void ChessBoard::CoutSight(
 
 
 }
-//---------------------------------------------------------------------------
+
 const std::vector<std::vector<bool> > ChessBoard::GetInSight(const EnumChessPieceColor color) const
 {
   std::vector<std::vector<bool> > inSight(8, std::vector<bool>(8,false));
@@ -419,18 +400,14 @@ const std::vector<std::vector<bool> > ChessBoard::GetInSight(const EnumChessPiec
   }
   return inSight;
 }
-//---------------------------------------------------------------------------
-const bool ChessBoard::IsValidMove(const ChessMove& move) const
+
+bool ChessBoard::IsValidMove(const ChessMove& move) const
 {
   const std::vector<ChessMove> moves = this->GetAllValidMoves(move.x1, move.y1);
-  if (std::find(moves.begin(),moves.end(),move)!=moves.end())
-    return true;
-  else
-    return false;
-
+  return std::find(std::begin(moves),std::end(moves), move) != std::end(moves);
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
+
+std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
   const EnumChessPieceColor whoseTurn) const
 {
   std::vector<ChessMove> allMoves;
@@ -452,8 +429,8 @@ const std::vector<ChessMove> ChessBoard::GetAllPossibleMoves(
   }
   return allMoves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMoves(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMoves(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -470,8 +447,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMoves(
   assert(!"Should not get here");
   throw std::logic_error("Unknown EnumChessPieceType");
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -572,8 +549,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesPawn(
   }
   return moves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -690,8 +667,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesKnight(
 
   return moves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -778,8 +755,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesBishop(
 
   return moves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -865,8 +842,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesRook(
 
   return moves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -1029,8 +1006,8 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesQueen(
 
   return moves;
 }
-//---------------------------------------------------------------------------
-const std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
+
+std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
   const int x, const int y) const
 {
   const ChessPiece piece = GetPiece(x,y);
@@ -1156,10 +1133,10 @@ const std::vector<ChessMove> ChessBoard::GetAllValidMovesKing(
 
   return moves;
 }
-//---------------------------------------------------------------------------
 
 
 
-#pragma package(smart_init)
+
+
 
 

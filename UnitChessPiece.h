@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+
 /*
   SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
   Copyright (C) 2008  Richel Bilderbeek
@@ -15,16 +15,16 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//---------------------------------------------------------------------------
+
 // From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
+
 #ifndef UnitChessPieceH
 #define UnitChessPieceH
-//---------------------------------------------------------------------------
+
 #include <iosfwd>
 #include "UnitEnumChessPieceType.h"
 #include "UnitEnumChessPieceColor.h"
-//---------------------------------------------------------------------------
+
 //Read-only
 struct ChessPiece
 {
@@ -35,17 +35,17 @@ struct ChessPiece
     const EnumChessPieceType type)
     : mColor(color), mType(type), mIsNull(false) {}
 
-  const EnumChessPieceColor GetColor() const { return mColor; }
-  const EnumChessPieceType GetType() const { return mType; }
-  const int IsNull() const { return mIsNull; }
+  EnumChessPieceColor GetColor() const { return mColor; }
+  EnumChessPieceType GetType() const { return mType; }
+  int IsNull() const { return mIsNull; }
 
   private:
     EnumChessPieceColor mColor;
     EnumChessPieceType mType;
     bool mIsNull;
 };
-//---------------------------------------------------------------------------
-const bool operator==(const ChessPiece& lhs, const ChessPiece& rhs);
+
+bool operator==(const ChessPiece& lhs, const ChessPiece& rhs);
 std::ostream& operator<<(std::ostream& os, const ChessPiece& piece);
-//---------------------------------------------------------------------------
+
 #endif

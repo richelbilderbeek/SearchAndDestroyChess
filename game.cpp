@@ -1,40 +1,20 @@
-//---------------------------------------------------------------------------
-/*
-  SearchAndDestroyChess 2, Kriegspiel/Dark Chess game
-  Copyright (C) 2008  Richel Bilderbeek
-
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-//---------------------------------------------------------------------------
-// From http://www.richelbilderbeek.nl
-//---------------------------------------------------------------------------
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <cassert>
 #include "UnitChessBoard.h"
 #include "UnitChessPiece.h"
-#pragma hdrstop
 
-#include "UnitChessGame.h"
-//---------------------------------------------------------------------------
+
+#include "game.h"
+
 ChessGame::ChessGame()
   : mWhoseTurn(white)
 {
 
 }
-//---------------------------------------------------------------------------
-const bool ChessGame::CanDoMove(const ChessMove& move) const
+
+bool ChessGame::CanDoMove(const ChessMove& move) const
 {
   //Regular move
   const ChessPiece piece = mBoard.GetPiece(move.x1,move.y1);
@@ -45,14 +25,14 @@ const bool ChessGame::CanDoMove(const ChessMove& move) const
   //ChessBoard checks the rest
   return mBoard.CanDoMove(move);
 }
-//---------------------------------------------------------------------------
+
 void ChessGame::DoMove(const ChessMove& move)
 {
   assert(this->CanDoMove(move)==true);
   mBoard.DoMove(move);
   mWhoseTurn = (mWhoseTurn == white ? black : white);
 }
-//---------------------------------------------------------------------------
+
 void ChessGame::CoutGame() const
 {
   mBoard.CoutSight(mWhoseTurn);
@@ -62,7 +42,7 @@ void ChessGame::CoutGame() const
     << " player's turn"
     << std::endl;
 }
-//---------------------------------------------------------------------------
+
 void ChessGame::CoutBoard() const
 {
   mBoard.CoutPieces(mWhoseTurn);
@@ -72,24 +52,24 @@ void ChessGame::CoutBoard() const
     << " player's turn"
     << std::endl;
 }
-//---------------------------------------------------------------------------
-const bool ChessGame::IsGameOver() const
+
+bool ChessGame::IsGameOver() const
 {
   return mBoard.IsGameOver();
 }
-//---------------------------------------------------------------------------
-const EnumChessPieceColor ChessGame::GetWinner() const
+
+EnumChessPieceColor ChessGame::GetWinner() const
 {
   assert(this->IsGameOver()==true);
   return mBoard.GetWinner();
 }
-//---------------------------------------------------------------------------
+
 const std::vector<std::vector<bool> > ChessGame::GetInSight() const
 {
   return mBoard.GetInSight(mWhoseTurn);
 }
-//---------------------------------------------------------------------------
-const ChessMove ChessGame::SuggestMove() const
+
+ChessMove ChessGame::SuggestMove() const
 {
   //Get all possible moves
   std::vector<ChessMove> moves = mBoard.GetAllPossibleMoves(mWhoseTurn);
@@ -108,8 +88,8 @@ const ChessMove ChessGame::SuggestMove() const
   return moves[ index ];
 
 }
-//---------------------------------------------------------------------------
-const std::vector<double> ChessGame::AttributeValues(
+
+std::vector<double> ChessGame::AttributeValues(
   const std::vector<ChessMove>& moves) const
 {
   const int nMoves = moves.size();
@@ -120,8 +100,8 @@ const std::vector<double> ChessGame::AttributeValues(
   }
   return v;
 }
-//---------------------------------------------------------------------------
-const double ChessGame::AttributeValue(
+
+double ChessGame::AttributeValue(
   const ChessMove& move) const
 {
   double value = 0.0;
@@ -156,13 +136,13 @@ const double ChessGame::AttributeValue(
   }
   return value;
 }
-//---------------------------------------------------------------------------
+
 //Parse in the format:
 //a2 a4
 //a2xb3
 //Na1 a8
 //Pc1xd5
-const bool ChessGame::ParseMove(
+bool ChessGame::ParseMove(
   const std::string& s,
   ChessMove& move) const
 {
@@ -266,5 +246,5 @@ const bool ChessGame::ParseMove(
   //if it contains exactly one 'x' it is a capture
   return true;
 }
-//---------------------------------------------------------------------------
-#pragma package(smart_init)
+
+
