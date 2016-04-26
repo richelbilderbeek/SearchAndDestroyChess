@@ -5,12 +5,12 @@
 
 enum EnumChessPieceType
 {
-  pawn,
-  knight,
   bishop,
-  rook,
+  king,
+  knight,
+  pawn,
   queen,
-  king
+  rook
 };
 
 std::ostream& operator<<(std::ostream& os, const EnumChessPieceType& type);

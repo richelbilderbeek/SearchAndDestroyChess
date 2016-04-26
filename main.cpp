@@ -48,7 +48,7 @@ int main()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) g.add_command(command::down);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) g.add_command(command::left);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) g.add_command(command::select);
-    if (clock.getElapsedTime().asMilliseconds() < 40) continue;
+    if (clock.getElapsedTime().asMilliseconds() < 200) continue;
     clock.restart();
     g.tick();
 

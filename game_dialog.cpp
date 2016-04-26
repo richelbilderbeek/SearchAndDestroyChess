@@ -1,7 +1,8 @@
 #include "game_dialog.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <cassert>
@@ -119,6 +120,8 @@ void game_dialog::draw(sf::RenderWindow& window)
 
   const double squareWidth  = static_cast<double>(window.getSize().x) / 8.0;
   const double squareHeight = static_cast<double>(window.getSize().y) / 8.0;
+  const double scale_x = squareWidth / 129.0; //The images are 129x129
+  const double scale_y = squareHeight / 129.0; //The images are 129x129
   //The CoordinatGetter transforms the coordinats of the board,
   //according to the player whose turn it is
   const CoordinatGetter coordinatGetter ( m_game.GetWhoseTurn());
@@ -132,15 +135,15 @@ void game_dialog::draw(sf::RenderWindow& window)
     {
       for (int x=0; x!=8; ++x)
       {
-        sf::Texture& t = m_textures.get_square((x + y) % 2 == 0 ? black : white);
-
-        //Draw it
-        ImageBuffer->Canvas->StretchDraw(
-          TRect( TPoint( ( coordinatGetter.GetX(x) + 0 ) * squareWidth ,
-                         ( coordinatGetter.GetY(y) + 0 ) * squareHeight),
-                 TPoint( ( coordinatGetter.GetX(x) + 1 ) * squareWidth ,
-                         ( coordinatGetter.GetY(y) + 1 ) * squareHeight)
-            ), image->Picture->Graphic);
+        const sf::Texture& t = m_textures.get_square((x + y) % 2 == 0 ? black : white);
+        sf::Sprite sprite;
+        sprite.setTexture(t);
+        sprite.setPosition(
+          ( coordinatGetter.GetX(x) + 0 ) * squareWidth,
+          ( coordinatGetter.GetY(y) + 0 ) * squareWidth
+        );
+        sprite.setScale( sf::Vector2f(scale_x, scale_y) );
+        window.draw(sprite);
       }
     }
 
@@ -149,16 +152,16 @@ void game_dialog::draw(sf::RenderWindow& window)
     {
       for (int x=0; x!=8; ++x)
       {
-        const TImage * const image = GetImage(inSight[y][x],board.GetPiece(x,y));
-        if( image == 0) continue;
-        //Draw it
-        ImageBuffer->Canvas->StretchDraw(
-          TRect( TPoint( ( coordinatGetter.GetX(x) + 0 ) * squareWidth ,
-                         ( coordinatGetter.GetY(y) + 0 ) * squareHeight),
-                 TPoint( ( coordinatGetter.GetX(x) + 1 ) * squareWidth ,
-                         ( coordinatGetter.GetY(y) + 1 ) * squareHeight)
-            ), image->Picture->Graphic);
-
+        //If there is nothing, t will be transparent :-)
+        const sf::Texture& t = get_texture(inSight[y][x],board.GetPiece(x,y));
+        sf::Sprite sprite;
+        sprite.setTexture(t);
+        sprite.setPosition(
+          ( coordinatGetter.GetX(x) + 0 ) * squareWidth,
+          ( coordinatGetter.GetY(y) + 0 ) * squareWidth
+        );
+        sprite.setScale( sf::Vector2f(scale_x, scale_y) );
+        window.draw(sprite);
       }
     }
   }
@@ -166,13 +169,20 @@ void game_dialog::draw(sf::RenderWindow& window)
   //Draw selected
   if (m_select_x != -1)
   {
-    //Draw selection cursor
-    ImageBuffer->Canvas->StretchDraw(
-      TRect( TPoint( ( coordinatGetter.GetX(m_select_x) + 0 ) * squareWidth ,
-                     ( coordinatGetter.GetY(m_select_y) + 0 ) * squareHeight),
-             TPoint( ( coordinatGetter.GetX(m_select_x) + 1 ) * squareWidth ,
-                     ( coordinatGetter.GetY(m_select_y) + 1 ) * squareHeight)
-        ), ImageSelected->Picture->Graphic);
+    {
+      //Draw selection cursor
+      sf::RectangleShape s(sf::Vector2f(squareWidth, squareHeight));
+      s.setPosition(
+        sf::Vector2f(
+          (coordinatGetter.GetX(m_select_x) + 0) * squareWidth ,
+          (coordinatGetter.GetY(m_select_y) + 0) * squareHeight
+        )
+      );
+      s.setOutlineThickness(8);
+      s.setOutlineColor(sf::Color::Blue);
+      s.setFillColor(sf::Color::Transparent);
+      window.draw(s);
+    }
 
     //If a chesspiece is selected, draw the crosses on the areas which
     //are valid moves
@@ -186,27 +196,45 @@ void game_dialog::draw(sf::RenderWindow& window)
         possibleMove != lastMove;
         ++possibleMove)
       {
-        ImageBuffer->Canvas->StretchDraw(
-          TRect(
-            TPoint( ( coordinatGetter.GetX(possibleMove->x2) + 0 ) * squareWidth ,
-                    ( coordinatGetter.GetY(possibleMove->y2) + 0 ) * squareHeight),
-            TPoint( ( coordinatGetter.GetX(possibleMove->x2) + 1 ) * squareWidth ,
-                    ( coordinatGetter.GetY(possibleMove->y2) + 1 ) * squareHeight)
-            ), ImageCross->Picture->Graphic);
+        sf::RectangleShape s;
+        s.setFillColor(sf::Color(128,128,128,128));
+        s.setPosition(
+          sf::Vector2f(
+            (coordinatGetter.GetX(possibleMove->x2) + 0) * squareWidth,
+            (coordinatGetter.GetY(possibleMove->y2) + 0) * squareHeight
+          )
+        );
+        window.draw(s);
       }
     }
   }
 
   //Draw cursor
-  ImageBuffer->Canvas->StretchDraw(
-    TRect( TPoint( ( coordinatGetter.GetX(m_cursor_x) + 0 ) * squareWidth ,
-                   ( coordinatGetter.GetY(m_cursor_y) + 0 ) * squareHeight),
-           TPoint( ( coordinatGetter.GetX(m_cursor_x) + 1 ) * squareWidth ,
-                   ( coordinatGetter.GetY(m_cursor_y) + 1 ) * squareHeight)
-      ), ImageCursor->Picture->Graphic);
+  sf::RectangleShape s(sf::Vector2f(squareWidth, squareHeight));
+  s.setPosition(
+    sf::Vector2f(
+      (coordinatGetter.GetX(m_cursor_x) + 0) * squareWidth,
+      (coordinatGetter.GetY(m_cursor_y) + 0) * squareHeight
+    )
+  );
+  s.setOutlineThickness(8);
+  s.setOutlineColor(sf::Color::Red);
+  s.setFillColor(sf::Color::Transparent);
+  window.draw(s);
+}
 
-  //Draw board and pieces to screen
-  this->Canvas->Draw(0,0,ImageBuffer->Picture->Graphic);
+const sf::Texture& game_dialog::get_texture(
+  const bool inSight,
+  const ChessPiece& piece) const
+{
+  //Visible?
+  if (!inSight) return m_textures.get_question_mark();
+  //Piece located there?
+  //No piece present? Then return null
+  if (piece.IsNull()==true) { return m_textures.get_transparent(); }
+  //Piece present, draw a piece
+  return m_textures.get(piece.GetType(), piece.GetColor());
+
 }
 
 void game_dialog::process_command(const command c)
@@ -272,39 +300,6 @@ void game_dialog::tick()
 }
 
 /*
-
-void game_dialog::DrawChessBoard()
-{
-
-}
-
-const TImage * const game_dialog::GetImage(
-  const bool inSight,
-  const ChessPiece& piece) const
-{
-  //Visible?
-  if (inSight== false) return ImageQuestionMark;
-  //Piece located there?
-  //No piece present? Then return null
-  if (piece.IsNull()==true) { return 0; }
-  //Piece present, draw a piece
-  //Which color and type?
-  const EnumChessPieceColor pieceColor = piece.GetColor();
-  switch ( piece.GetType() )
-  {
-    case king  : return ( pieceColor == white ? ImageWhiteKing   : ImageBlackKing  );
-    case queen : return ( pieceColor == white ? ImageWhiteQueen  : ImageBlackQueen );
-    case rook  : return ( pieceColor == white ? ImageWhiteRook   : ImageBlackRook  );
-    case bishop: return ( pieceColor == white ? ImageWhiteBishop : ImageBlackBishop);
-    case knight: return ( pieceColor == white ? ImageWhiteKnight : ImageBlackKnight);
-    case pawn  : return ( pieceColor == white ? ImageWhitePawn   : ImageBlackPawn  );
-  }
-  assert(!"Should not get here. Unknown piece type");
-  throw std::logic_error("Unknown piece type");
-
-}
-
-
 
 
 const bool game_dialog::IsCurrentPlayerHuman() const

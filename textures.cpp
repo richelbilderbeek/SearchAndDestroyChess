@@ -2,70 +2,83 @@
 #include <cassert>
 
 textures::textures()
-  : m_textures{}
+  : m_question_mark{},
+    m_square_dark{},
+    m_square_light{},
+    m_transparent{},
+    m_bb{},
+    m_kb{},
+    m_nb{},
+    m_pb{},
+    m_qb{},
+    m_rb{},
+    m_bw{},
+    m_kw{},
+    m_nw{},
+    m_pw{},
+    m_qw{},
+    m_rw{}
 {
-  std::vector<std::pair<texture_type,std::string>> v = {
-    std::make_pair(texture_type::heart_blue, "../SimpleKeeper/Sprites/TriforceGround2.png"),
-    std::make_pair(texture_type::heart_red, "../SimpleKeeper/Sprites/TriforceGround1.png"),
-    std::make_pair(texture_type::imp_blue_front_1, "../SimpleKeeper/Sprites/LinkBlueFrontSmallShield1.png"),
-    std::make_pair(texture_type::imp_red_front_1, "../SimpleKeeper/Sprites/LinkRedFrontSmallShield1.png")
-  };
+  { const bool s = m_question_mark.loadFromFile("../SearchAndDestroyChess/Sprites/qm.png"); assert(s); }
+  { const bool s = m_square_dark.loadFromFile("../SearchAndDestroyChess/Sprites/d.png"); assert(s); }
+  { const bool s = m_square_light.loadFromFile("../SearchAndDestroyChess/Sprites/l.png"); assert(s); }
+  { const bool s = m_transparent.loadFromFile("../SearchAndDestroyChess/Sprites/t.png"); assert(s); }
 
-  for (const auto p: v)
-  {
-    sf::Texture t;
-    if (!t.loadFromFile(p.second))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(p.first, t));
-  }
+  { const bool s = m_bb.loadFromFile("../SearchAndDestroyChess/Sprites/bb.png"); assert(s); }
+  { const bool s = m_kb.loadFromFile("../SearchAndDestroyChess/Sprites/kb.png"); assert(s); }
+  { const bool s = m_nb.loadFromFile("../SearchAndDestroyChess/Sprites/nb.png"); assert(s); }
+  { const bool s = m_pb.loadFromFile("../SearchAndDestroyChess/Sprites/pb.png"); assert(s); }
+  { const bool s = m_qb.loadFromFile("../SearchAndDestroyChess/Sprites/qb.png"); assert(s); }
+  { const bool s = m_rb.loadFromFile("../SearchAndDestroyChess/Sprites/rb.png"); assert(s); }
 
-  //Sprites from bigger picture
-  {
-    sf::Texture t;
-    if (!t.loadFromFile("../SimpleKeeper/Sprites/DungeonsAll.png", sf::IntRect(754,858,16,16)))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(texture_type::empty, t));
-  }
-  {
-    sf::Texture t;
-    if (!t.loadFromFile("../SimpleKeeper/Sprites/DungeonsAll.png", sf::IntRect(640,697,16,16)))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(texture_type::floor, t));
-  }
-  {
-    sf::Texture t;
-    if (!t.loadFromFile("../SimpleKeeper/Sprites/DungeonsAll.png", sf::IntRect(280,148,16,16)))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(texture_type::hole, t));
-  }
-  {
-    sf::Texture t;
-    if (!t.loadFromFile("../SimpleKeeper/Sprites/DungeonsAll.png", sf::IntRect(735,887,16,16)))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(texture_type::wall, t));
-  }
-  {
-    sf::Texture t;
-    if (!t.loadFromFile("../SimpleKeeper/Sprites/DungeonsAll.png", sf::IntRect(261,148,16,16)))
-    {
-      assert(!"Should not get here");
-    }
-    m_textures.insert(std::make_pair(texture_type::water, t));
-  }
+  { const bool s = m_bw.loadFromFile("../SearchAndDestroyChess/Sprites/bw.png"); assert(s); }
+  { const bool s = m_kw.loadFromFile("../SearchAndDestroyChess/Sprites/kw.png"); assert(s); }
+  { const bool s = m_nw.loadFromFile("../SearchAndDestroyChess/Sprites/nw.png"); assert(s); }
+  { const bool s = m_pw.loadFromFile("../SearchAndDestroyChess/Sprites/pw.png"); assert(s); }
+  { const bool s = m_qw.loadFromFile("../SearchAndDestroyChess/Sprites/qw.png"); assert(s); }
+  { const bool s = m_rw.loadFromFile("../SearchAndDestroyChess/Sprites/rw.png"); assert(s); }
 }
 
-const sf::Texture& textures::get(const texture_type t) const
+const sf::Texture& textures::get_square(
+  const EnumChessPieceColor c
+) const
 {
-  assert(m_textures.find(t) != std::end(m_textures));
-  return (*m_textures.find(t)).second;
+  switch (c)
+  {
+    case EnumChessPieceColor::white: return m_square_light;
+    case EnumChessPieceColor::black: return m_square_dark;
+  }
+  throw std::runtime_error("textures::get_square");
+}
+
+const sf::Texture& textures::get(
+  const EnumChessPieceType t,
+  const EnumChessPieceColor c
+) const
+{
+  if (c == white)
+  {
+    switch(t)
+    {
+      case bishop: return m_bw;
+      case king: return m_kw;
+      case knight: return m_nw;
+      case pawn: return m_pw;
+      case queen: return m_qw;
+      case rook: return m_rw;
+    }
+  }
+  else
+  {
+    assert(c == black);
+    switch(t)
+    {
+      case bishop: return m_bb;
+      case king: return m_kb;
+      case knight: return m_nb;
+      case pawn: return m_pb;
+      case queen: return m_qb;
+      case rook: return m_rb;
+    }
+  }
 }

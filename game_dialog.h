@@ -35,6 +35,10 @@ private:
   void do_move();
   void do_move(const ChessMove& move);
   void do_select(const int cursorX, const int cursorY);
+  const sf::Texture& get_texture(
+    const bool inSight,
+    const ChessPiece& piece
+  ) const;
   void process_commands();
   void process_command(const command c);
 
@@ -49,9 +53,6 @@ private:
 private:	// User declarations
   void DrawChessBoard();
   const bool IsCurrentPlayerHuman() const;
-  const TImage * const GetImage(
-    const bool inSight,
-    const ChessPiece& piece) const;
   */
 };
 #endif
