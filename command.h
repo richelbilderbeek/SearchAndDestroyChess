@@ -7,7 +7,8 @@ enum class command
   right,
   down,
   left,
-  select
+  select,
+  ok
 };
 
 #endif // COMMAND_H

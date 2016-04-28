@@ -296,7 +296,7 @@ void game_dialog::draw_player_won(sf::RenderWindow& window, const int player) co
 
 void game_dialog::draw_start_turn(sf::RenderWindow& window) const
 {
-  window.setTitle("Press any key");
+  window.setTitle("Press enter to start the next turn");
   sf::RectangleShape r(sf::Vector2f(m_window_width, m_window_height));
   r.setPosition(0,0);
   r.setFillColor(sf::Color(128,128,128));
@@ -378,7 +378,7 @@ void game_dialog::process_commands()
     case game_state::playing: break;
     case game_state::start_turn:
     {
-      if (!m_commands.empty())
+      if (!m_commands.empty() && m_commands.count(command::ok))
       {
         m_game_state = game_state::playing;
         m_commands.clear();
