@@ -42,4 +42,3 @@ struct chess_game
 
 
 #endif
- 

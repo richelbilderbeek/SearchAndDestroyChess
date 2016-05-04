@@ -44,11 +44,7 @@ void game_dialog::click_mouse(const int x, const int y)
     case game_state::player_1_won: return;
     case game_state::player_2_won: return;
     case game_state::playing: break;
-    case game_state::start_turn:
-    {
-      m_game_state = game_state::playing;
-    }
-    return;
+    case game_state::start_turn: return;
   }
 
   const int w = m_window_width;
@@ -365,6 +361,10 @@ void game_dialog::process_command(const command c)
       break;
     case command::select:
       do_select(m_cursor_x, m_cursor_y);
+      break;
+    case command::ok:
+      //This happens by accident, when someone presses enter
+      //for a new screen
       break;
   }
 }
