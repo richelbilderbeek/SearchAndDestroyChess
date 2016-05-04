@@ -62,6 +62,11 @@ int main()
       {
         g.add_command(command::select);
       }
+      const int key_select{7};
+      if (sf::Joystick::isButtonPressed(0,key_select))
+      {
+        g.add_command(command::ok);
+      }
     }
     if (sf::Joystick::isConnected(1))
     {
@@ -78,10 +83,14 @@ int main()
         if (dy >  50.0) { g.add_command(command::down); }
       }
       const int key_activate{0};
-      const bool pressed{sf::Joystick::isButtonPressed(1,key_activate)};
-      if (pressed)
+      if (sf::Joystick::isButtonPressed(1,key_activate))
       {
         g.add_command(command::select);
+      }
+      const int key_select{7};
+      if (sf::Joystick::isButtonPressed(1,key_select))
+      {
+        g.add_command(command::ok);
       }
     }
     // get global mouse position
@@ -97,7 +106,7 @@ int main()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) g.add_command(command::left);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) g.add_command(command::select);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) g.add_command(command::ok);
-    if (clock.getElapsedTime().asMilliseconds() < 100) continue;
+    if (clock.getElapsedTime().asMilliseconds() < 200) continue;
     clock.restart();
     g.tick();
     window.clear();
