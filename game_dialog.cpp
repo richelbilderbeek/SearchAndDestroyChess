@@ -50,7 +50,7 @@ void game_dialog::click_mouse(const int x, const int y)
   const int w = m_window_width;
   const int h = m_window_height;
 
-  if (m_game.GetWhoseTurn() == piece_color::white)
+  if (m_game.get_whose_turn() == piece_color::white)
   {
     m_cursor_x = 0 + (x / (w  / 8));
     m_cursor_y = 7 - (y / (h / 8));
@@ -125,7 +125,7 @@ void game_dialog::do_select(const int cursorX, const int cursorY)
   if ( m_select_x == -1
     && m_select_y == -1
     && m_game.GetBoard().GetPiece(cursorX,cursorY).IsNull()==false
-    && m_game.GetBoard().GetPiece(cursorX,cursorY).GetColor() == m_game.GetWhoseTurn()
+    && m_game.GetBoard().GetPiece(cursorX,cursorY).GetColor() == m_game.get_whose_turn()
   )
   {
     //Nothing selected until now
@@ -136,9 +136,9 @@ void game_dialog::do_select(const int cursorX, const int cursorY)
        m_select_x != -1
     && m_select_y != -1
     && m_game.GetBoard().GetPiece(m_select_x,m_select_y).IsNull() == false
-    && m_game.GetBoard().GetPiece(m_select_x,m_select_y).GetColor() == m_game.GetWhoseTurn()
+    && m_game.GetBoard().GetPiece(m_select_x,m_select_y).GetColor() == m_game.get_whose_turn()
     && m_game.GetBoard().GetPiece(cursorX,cursorY).IsNull() == false
-    && m_game.GetBoard().GetPiece(cursorX,cursorY).GetColor() == m_game.GetWhoseTurn() )
+    && m_game.GetBoard().GetPiece(cursorX,cursorY).GetColor() == m_game.get_whose_turn() )
   {
     //Selected a piece of own color and now selecting another piece
     //of own color
@@ -173,7 +173,7 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
   const double scale_y = block_height / 129.0; //The images are 129x129
   //The CoordinatGetter transforms the coordinats of the board,
   //according to the player whose turn it is
-  const coordinat_getter coordinatGetter ( m_game.GetWhoseTurn());
+  const coordinat_getter coordinatGetter ( m_game.get_whose_turn());
 
   //Draw squares, question marks and pieces
   {
@@ -320,7 +320,7 @@ void game_dialog::process_command(const command c)
   switch (c)
   {
     case command::left:
-      if (m_game.GetWhoseTurn()==piece_color::white)
+      if (m_game.get_whose_turn()==piece_color::white)
       {
         --m_cursor_x; if (m_cursor_x < 0) m_cursor_x = 0;
       }
@@ -330,7 +330,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::right:
-      if (m_game.GetWhoseTurn()==piece_color::white)
+      if (m_game.get_whose_turn()==piece_color::white)
       {
         ++m_cursor_x; if (m_cursor_x > 7) m_cursor_x = 7;
       }
@@ -340,7 +340,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::down:
-      if (m_game.GetWhoseTurn()==piece_color::white)
+      if (m_game.get_whose_turn()==piece_color::white)
       {
         --m_cursor_y; if (m_cursor_y < 0) m_cursor_y = 0;
       }
@@ -350,7 +350,7 @@ void game_dialog::process_command(const command c)
       }
       break;
     case command::up:
-      if (m_game.GetWhoseTurn()==piece_color::white)
+      if (m_game.get_whose_turn()==piece_color::white)
       {
         ++m_cursor_y; if (m_cursor_y > 7) m_cursor_y = 7;
       }

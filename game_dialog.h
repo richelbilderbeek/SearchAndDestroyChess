@@ -18,6 +18,7 @@ public:
   void add_command(const command c);
   void click_mouse(const int x, const int y);
   void draw(sf::RenderWindow& window);
+  piece_color get_whose_turn() const { return m_game.get_whose_turn(); }
   void tick();
 
 private:

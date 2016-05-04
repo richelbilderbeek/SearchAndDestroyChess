@@ -152,13 +152,13 @@ bool chess_game::ParseMove(
   //If there is no upper case, it is a pawn
   if (s=="o-o" || s=="O-O" || s == "0-0")
   {
-    const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
+    const int y = (this->get_whose_turn() == piece_color::white ? 0 : 7);
     move = chess_move(king,4,y,false,6,y);
     return true;
   }
   if (s=="o-o-o" || s=="O-O-O" || s == "0-0-0")
   {
-    const int y = (this->GetWhoseTurn() == piece_color::white ? 0 : 7);
+    const int y = (this->get_whose_turn() == piece_color::white ? 0 : 7);
     move = chess_move(king,4,y,false,2,y);
     return true;
   }

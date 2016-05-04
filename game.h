@@ -20,7 +20,7 @@ struct chess_game
   void CoutBoard() const;
 
   const chess_board& GetBoard() const { return m_board; }
-  piece_color GetWhoseTurn() const { return m_whose_turn; }
+  piece_color get_whose_turn() const { return m_whose_turn; }
 
   const std::vector<std::vector<bool>> GetInSight() const;
 
