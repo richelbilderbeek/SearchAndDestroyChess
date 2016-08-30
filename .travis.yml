@@ -10,6 +10,8 @@ before_install:
 install: 
   - sudo apt-get install -qq g++-5  
   - sudo apt-get install libsfml-dev
+  - ./install_oclint.sh
 
 script: 
- - ./build.sh
+  - ./build.sh
+  - ./do_oclint.sh

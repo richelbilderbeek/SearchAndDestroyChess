@@ -27,3 +27,5 @@
 *.out
 *.app
 *.pro.user
+*.tar.gz
+oclint-0.10.3/
