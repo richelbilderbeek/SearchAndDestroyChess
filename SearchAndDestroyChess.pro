@@ -1,7 +1,3 @@
-TEMPLATE = app
-CONFIG += qt console
-CONFIG -= app_bundle
-
 SOURCES += main.cpp \
     chess_board.cpp \
     chess_move.cpp \
@@ -14,9 +10,6 @@ SOURCES += main.cpp \
     game.cpp \
     game_state.cpp \
     textures.cpp
-
-QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -Weffc++
-LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 HEADERS += \
     chess_board.h \
@@ -31,7 +24,15 @@ HEADERS += \
     game_state.h \
     textures.h
 
-# C++11
+# C++14
+CONFIG += c++14
 QMAKE_CXX = g++-5
 QMAKE_LINK = g++-5
 QMAKE_CC = gcc-5
+QMAKE_CXXFLAGS += -std=c++14
+
+# Compile clean with high warning levels
+QMAKE_CXXFLAGS += -Wall -Wextra -Weffc++
+
+# SFML
+LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
