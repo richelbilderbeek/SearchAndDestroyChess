@@ -1,5 +1,16 @@
+include(../RibiClasses/CppAbout/CppAbout.pri)
+include(../RibiClasses/CppFileIo/CppFileIo.pri)
+include(../RibiClasses/CppHelp/CppHelp.pri)
+include(../RibiClasses/CppMenuDialog/CppMenuDialog.pri)
+
+#Specific, console
+include(../RibiClasses/CppCanvas/CppCanvas.pri)
+include(../DotMatrix/DotMatrix.pri)
+include(../RibiClasses/CppTextCanvas/CppTextCanvas.pri)
 include(SearchAndDestroyChess.pri)
-SOURCES += main.cpp
+include(SearchAndDestroyChessConsoleTest.pri)
+
+SOURCES += main_test.cpp
 
 # C++14
 CONFIG += c++14
@@ -37,13 +48,8 @@ CONFIG(debug, debug|release) {
   QMAKE_LFLAGS += -fsanitize=undefined
   LIBS += -lubsan
 
-  # gprof
-  QMAKE_CXXFLAGS += -pg
-  QMAKE_LFLAGS += -pg
-
   # GSL
-  #DEFINES += GSL_THROW_ON_CONTRACT_VIOLATION
-  DEFINES += GSL_UNENFORCED_ON_CONTRACT_VIOLATION
+  DEFINES += GSL_THROW_ON_CONTRACT_VIOLATION
 }
 
 # Qt
@@ -62,6 +68,9 @@ QMAKE_CXXFLAGS += -fext-numeric-literals
 
 # SFML
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
+# Boost.Test
+LIBS += -lboost_unit_test_framework
 
 message(Host name: $$QMAKE_HOST.name)
 contains(QMAKE_HOST.name,pc-157-103) {

@@ -48,4 +48,5 @@ private:
   void process_commands();
   void process_command(const command c);
 };
+
 #endif
