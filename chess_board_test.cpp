@@ -2,8 +2,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(board_has_sixteen_pieces)
+BOOST_AUTO_TEST_CASE(board_is_eight_times_eight_squares)
 {
-  chess_board b;
-  BOOST_CHECK_EQUAL(b.GetPieces().size(), 16);
+  const chess_board b;
+  BOOST_CHECK_EQUAL(b.GetPieces().size(), 8);
+  BOOST_CHECK_EQUAL(b.GetPieces()[0].size(), 8);
 }
