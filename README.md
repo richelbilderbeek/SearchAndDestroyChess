@@ -68,3 +68,6 @@ Also selection works with the mouse.
 
 ![SearchAndDestroyChess v3.0](Screenshots/SearchAndDestroyChess_1_0.png)
 
+## External links
+
+ * [Richel Bilderbeek's games](https://github.com/richelbilderbeek/Games)
