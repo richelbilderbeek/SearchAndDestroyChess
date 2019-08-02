@@ -19,11 +19,8 @@ install:
   # Other prerequisites
   - ./download_other_githubs
 
-# Start virtual X server, from https://docs.travis-ci.com/user/gui-and-headless-browsers/
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+services:
+  - xvfb
 
 script: 
   # Console test
