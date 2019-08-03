@@ -1,6 +1,6 @@
 // Boost.Test does not play well with -Weffc++
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
+
 
 #define BOOST_TEST_DYN_LINK // Defines a main function
 
