@@ -1,9 +1,9 @@
 # SearchAndDestroyChess
 
-Branch|[![Travis CI logo](TravisCI.png)](https://travis-ci.org)|[![Codecov logo](Codecov.png)](https://www.codecov.io)
+Branch|[![Travis CI logo](TravisCI.png)](https://travis-ci.com)|[![Codecov logo](Codecov.png)](https://www.codecov.io)
 ---|---|---
-master|[![Build Status](https://travis-ci.org/richelbilderbeek/SearchAndDestroyChess.svg?branch=master)](https://travis-ci.org/richelbilderbeek/SearchAndDestroyChess)|[![codecov.io](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/coverage.svg?branch=master)](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/branch/master)
-develop|[![Build Status](https://travis-ci.org/richelbilderbeek/SearchAndDestroyChess.svg?branch=develop)](https://travis-ci.org/richelbilderbeek/SearchAndDestroyChess)|[![codecov.io](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/coverage.svg?branch=develop)](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/branch/develop)
+master|[![Build Status](https://travis-ci.com/richelbilderbeek/SearchAndDestroyChess.svg?branch=master)](https://travis-ci.com/richelbilderbeek/SearchAndDestroyChess)|[![codecov.io](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/coverage.svg?branch=master)](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/branch/master)
+develop|[![Build Status](https://travis-ci.com/richelbilderbeek/SearchAndDestroyChess.svg?branch=develop)](https://travis-ci.com/richelbilderbeek/SearchAndDestroyChess)|[![codecov.io](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/coverage.svg?branch=develop)](https://codecov.io/github/richelbilderbeek/SearchAndDestroyChess/branch/develop)
 
 Chess game with a fog of war, programmed in C++ using SFML.
 
