@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# Don't put the full path here. It has to be found in the
+# In /home/yourusername/.bashrc add the following line add the end instead:
+# export PATH=$PATH:/home/richel/GitHubs/RibiLibraries/mxe/usr/bin/
+
 # Crosscompiles Search And Destroy Chess to the Windows operating system
 
 DESKTOP_PRO=SearchAndDestroyChess.pro
