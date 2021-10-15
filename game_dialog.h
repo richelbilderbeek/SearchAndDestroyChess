@@ -5,6 +5,7 @@
 #include "command.h"
 #include "game.h"
 #include "game_state.h"
+#include "game_options.h"
 #include "textures.h"
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -26,6 +27,7 @@ private:
   int m_cursor_x;
   int m_cursor_y;
   chess_game m_game;
+  game_options m_options;
   game_state m_game_state;
   int m_select_x;
   int m_select_y;

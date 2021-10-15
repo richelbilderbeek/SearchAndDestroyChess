@@ -8,6 +8,7 @@ HEADERS += \
     game_dialog.h \
     command.h \
     game.h \
+    game_options.h \
     game_state.h \
     textures.h
 
@@ -18,6 +19,7 @@ SOURCES += \
     coordinat_getter.cpp \
     piece_color.cpp \
     piece_type.cpp \
+    game_options.cpp \
     game_dialog.cpp \
     command.cpp \
     game.cpp \

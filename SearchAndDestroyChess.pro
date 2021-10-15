@@ -1,7 +1,6 @@
 include(SearchAndDestroyChess.pri)
 SOURCES += main.cpp
 
-
 CONFIG += c++17
 QMAKE_CXXFLAGS += -std=c++17
 
@@ -70,4 +69,3 @@ LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 #LIBS += -L/home/richel/GitHubs/RibiLibraries/mxe/usr/i686-w64-mingw32.static/lib/libsfml-graphics.a
 #LIBS += -L/home/richel/GitHubs/RibiLibraries/mxe/usr/i686-w64-mingw32.static/lib/libsfml-system.a
 #LIBS += -L/home/richel/GitHubs/RibiLibraries/mxe/usr/i686-w64-mingw32.static/lib/libsfml-widnow.a
-
