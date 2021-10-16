@@ -206,10 +206,7 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
       {
         //If there is nothing, t will be transparent :-)
         bool is_in_sight = inSight[y][x];
-        if (
-             (get_whose_turn() == piece_color::white && !m_options.m_white_sees_fog)
-          || (get_whose_turn() == piece_color::black && !m_options.m_black_sees_fog)
-        ) is_in_sight = true;
+        if (!m_options.has_fog_of_war(get_whose_turn())) is_in_sight = true;
         const sf::Texture& t = get_texture(is_in_sight, board.GetPiece(x,y));
         sf::Sprite sprite;
         sprite.setTexture(t);
