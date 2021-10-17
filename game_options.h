@@ -12,7 +12,7 @@ public:
   bool has_fog_of_war(const piece_color& player) const noexcept;
   private:
   bool m_black_sees_fog = true;
-  bool m_white_sees_fog = true;
+  bool m_white_sees_fog = false;
 };
 
 #endif // GAME_OPTIONS_H
