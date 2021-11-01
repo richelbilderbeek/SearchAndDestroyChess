@@ -11,7 +11,7 @@ public:
   /// Determine if a player has a fog of war
   bool has_fog_of_war(const piece_color& player) const noexcept;
   private:
-  bool m_black_sees_fog = false;
+  bool m_black_sees_fog = true;
   bool m_white_sees_fog = true;
 };
 
