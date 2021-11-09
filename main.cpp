@@ -11,7 +11,7 @@
 int main()
 {
 
-  const int window_width{640};
+  const int window_width{640 + 640};
   const int window_height{640};
 
   game_dialog g(window_width, window_height);

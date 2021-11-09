@@ -169,11 +169,12 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
 
   const double block_width  = static_cast<double>(m_window_width) / 8.0;
   const double block_height = static_cast<double>(m_window_height) / 8.0;
-  const double scale_x = block_width / 129.0; //The images are 129x129
-  const double scale_y = block_height / 129.0; //The images are 129x129
+  const double block_size = std::min(block_width, block_height);
+  const double scale_x = block_size / 129.0; //The images are 129x129
+  const double scale_y = block_size / 129.0; //The images are 129x129
   //The CoordinatGetter transforms the coordinats of the board,
   //according to the player whose turn it is
-  const coordinat_getter coordinatGetter ( m_game.get_whose_turn());
+  const coordinat_getter coordinatGetter(m_game.get_whose_turn());
 
   //Draw squares, question marks and pieces
   {
@@ -191,8 +192,8 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
         sf::Sprite sprite;
         sprite.setTexture(t);
         sprite.setPosition(
-          ( coordinatGetter.get_x(x) + 0 ) * block_width,
-          ( coordinatGetter.get_y(y) + 0 ) * block_width
+          ( coordinatGetter.get_x(x) + 0 ) * block_size,
+          ( coordinatGetter.get_y(y) + 0 ) * block_size
         );
         sprite.setScale( sf::Vector2f(scale_x, scale_y) );
         window.draw(sprite);
@@ -211,8 +212,8 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
         sf::Sprite sprite;
         sprite.setTexture(t);
         sprite.setPosition(
-          ( coordinatGetter.get_x(x) + 0 ) * block_width,
-          ( coordinatGetter.get_y(y) + 0 ) * block_width
+          ( coordinatGetter.get_x(x) + 0 ) * block_size,
+          ( coordinatGetter.get_y(y) + 0 ) * block_size
         );
         sprite.setScale( sf::Vector2f(scale_x, scale_y) );
         window.draw(sprite);
@@ -225,11 +226,11 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
   {
     {
       //Draw selection cursor
-      sf::RectangleShape s(sf::Vector2f(block_width, block_height));
+      sf::RectangleShape s(sf::Vector2f(block_size, block_size));
       s.setPosition(
         sf::Vector2f(
-          (coordinatGetter.get_x(m_select_x) + 0) * block_width ,
-          (coordinatGetter.get_y(m_select_y) + 0) * block_height
+          (coordinatGetter.get_x(m_select_x) + 0) * block_size,
+          (coordinatGetter.get_y(m_select_y) + 0) * block_size
         )
       );
       s.setOutlineThickness(8);
@@ -250,12 +251,12 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
         possibleMove != lastMove;
         ++possibleMove)
       {
-        sf::RectangleShape s(sf::Vector2f(block_width, block_height));
+        sf::RectangleShape s(sf::Vector2f(block_size, block_size));
         s.setFillColor(sf::Color(0,0,128,128));
         s.setPosition(
           sf::Vector2f(
-            (coordinatGetter.get_x(possibleMove->x2) + 0) * block_width,
-            (coordinatGetter.get_y(possibleMove->y2) + 0) * block_height
+            (coordinatGetter.get_x(possibleMove->x2) + 0) * block_size,
+            (coordinatGetter.get_y(possibleMove->y2) + 0) * block_size
           )
         );
         window.draw(s);
@@ -264,11 +265,11 @@ void game_dialog::draw_game(sf::RenderWindow& window) const
   }
 
   //Draw cursor
-  sf::RectangleShape s(sf::Vector2f(block_width, block_height));
+  sf::RectangleShape s(sf::Vector2f(block_size, block_size));
   s.setPosition(
     sf::Vector2f(
-      (coordinatGetter.get_x(m_cursor_x) + 0) * block_width,
-      (coordinatGetter.get_y(m_cursor_y) + 0) * block_height
+      (coordinatGetter.get_x(m_cursor_x) + 0) * block_size,
+      (coordinatGetter.get_y(m_cursor_y) + 0) * block_size
     )
   );
   s.setOutlineThickness(4);
