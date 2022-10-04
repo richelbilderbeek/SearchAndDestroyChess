@@ -1,5 +1,6 @@
 #include "textures.h"
 #include <cassert>
+#include <stdexcept>
 
 textures::textures()
   : m_question_mark{},
