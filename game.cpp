@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <chrono>
+#include <random>
 #include "chess_board.h"
 #include "chess_piece.h"
 
@@ -74,7 +76,9 @@ chess_move chess_game::SuggestMove() const
 {
   //Get all possible moves
   std::vector<chess_move> moves = m_board.GetAllPossibleMoves(m_whose_turn);
-  std::random_shuffle(moves.begin(), moves.end() );
+  //std::random_shuffle(moves.begin(), moves.end() );
+  const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::shuffle(moves.begin(), moves.end(), std::default_random_engine(seed));
 
   const int nMoves = moves.size();
   assert(nMoves>0);
