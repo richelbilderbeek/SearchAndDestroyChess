@@ -10,4 +10,3 @@
 - Being in center positions is nice,
   in this game coverage and lines of sight are more important
 
-
