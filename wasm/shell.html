@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SearchAndDestroyChess</title>
+  <style>
+    html, body { margin: 0; background: #222; color: #eee; font-family: sans-serif; }
+    #container { max-width: 640px; margin: 0 auto; padding: 8px; text-align: center; }
+    #canvas { width: 100%; max-width: 640px; aspect-ratio: 1 / 1; display: block; margin: 0 auto; outline: none; }
+    #status { min-height: 1.5em; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="status">Loading...</div>
+    <canvas id="canvas"></canvas>
+  </div>
+  <script>
+    // Give the page keyboard focus, also when embedded in an iframe
+    window.addEventListener("load", function() { window.focus(); });
+    document.getElementById("canvas").addEventListener("mousedown", function() { window.focus(); });
+    var Module = {
+      print: function(t) { console.log(t); },
+      printErr: function(t) { console.error(t); }
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>

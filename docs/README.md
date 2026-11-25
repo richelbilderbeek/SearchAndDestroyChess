@@ -6,6 +6,7 @@ and one of
 
 ![SearchAndDestroyChess v3.2](screenshots/SearchAndDestroyChess_3_2.png)
 
+- [Play in your browser](play.md)
 - [Screenshots](screenshots/README.md)
 - [Rules](rules.md)
 - [Gameplay](gameplay.md)

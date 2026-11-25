@@ -10,6 +10,10 @@ on:
       - .github/workflows/create_zensical_website.yaml
       - 'docs/**'
       - zensical.toml
+      - '*.cpp'
+      - '*.h'
+      - 'Sprites/**'
+      - 'wasm/**'
   workflow_dispatch:
 
 permissions:
@@ -31,6 +35,9 @@ jobs:
           python-version: 3.x
       - run: pip install zensical
       - run: zensical build --clean --strict
+      # Build the WebAssembly version of the game, played on the 'Play' page
+      - uses: mymindstorm/setup-emsdk@v14
+      - run: ./wasm/build.sh site/game
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site

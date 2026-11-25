@@ -6,6 +6,7 @@ edit_uri = "blob/master/docs/"
 
 nav = [
   { "Start" = "README.md"},
+  "play.md",
   "screenshots/README.md",
   "rules.md",
   "gameplay.md",
