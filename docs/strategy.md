@@ -1,7 +1,7 @@
 # Strategy
 
 - Prefer to keep your king protected in all 16 directions
-  (4x diagonal, 4x horizontal, 8x knigh jumps)
+  (4x diagonal, 4x horizontal, 8x knight jumps)
 - Castling is extra strong
 - Bluffing is an important part of the game
 - In trouble? Make that unexpected move!
