@@ -2,7 +2,7 @@
 #
 # Build the WebAssembly version of SearchAndDestroyChess
 #
-# Usage, from the repository root, with Emscripten's emcc in the PATH:
+# Usage, from the repository root, with Emscripten's em++ in the PATH:
 #
 #   ./wasm/build.sh [output_folder]
 #
@@ -14,7 +14,7 @@ set -e
 out_dir=${1:-build_wasm}
 mkdir -p "${out_dir}"
 
-emcc -std=c++17 -O2 \
+em++ -std=c++17 -O2 \
   -DNDEBUG \
   -I. \
   chess_board.cpp \
