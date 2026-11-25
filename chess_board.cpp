@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <cassert>
 #include <iostream>
+#include <iterator>
 #include "chess_piece.h"
 
 
