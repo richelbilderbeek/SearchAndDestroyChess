@@ -52,6 +52,7 @@ WebAssembly
 Yadav
 capturer
 carnaval
+codecov
 config
 dropin
 formalisms

@@ -1,5 +1,7 @@
 # Search And Destroy Chess
 
+[![codecov](https://codecov.io/gh/richelbilderbeek/SearchAndDestroyChess/branch/main/graph/badge.svg)](https://codecov.io/gh/richelbilderbeek/SearchAndDestroyChess)
+
 - [Go to the nicely rendered website](https://richelbilderbeek.github.io/SearchAndDestroyChess/).
 
 ## Files used by continuous integration scripts

@@ -2,7 +2,7 @@
 site_name = "Search And Destroy Chess"
 site_url = "https://richelbilderbeek.github.io/SearchAndDestroyChess/"
 repo_url = "https://github.com/richelbilderbeek/SearchAndDestroyChess"
-edit_uri = "blob/master/docs/"
+edit_uri = "blob/main/docs/"
 
 nav = [
   { "Start" = "README.md"},
