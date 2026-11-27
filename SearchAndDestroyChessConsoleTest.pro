@@ -5,7 +5,7 @@ include($$PWD/ribi_classes/CppMenuDialog/CppMenuDialog.pri)
 
 #Specific, console
 include($$PWD/ribi_classes/CppCanvas/CppCanvas.pri)
-include(../DotMatrix/DotMatrix.pri)
+include($$PWD/dot_matrix/DotMatrix.pri)
 include($$PWD/ribi_classes/CppTextCanvas/CppTextCanvas.pri)
 include(SearchAndDestroyChess.pri)
 include(SearchAndDestroyChessConsoleTest.pri)

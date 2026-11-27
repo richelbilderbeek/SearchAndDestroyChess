@@ -6,6 +6,7 @@ Carnaval
 Cormac
 Dahlö
 Dardel
+DotMatrix
 Emscripten
 Erdmann
 Frans
@@ -31,6 +32,7 @@ Pavlin
 Pelle
 Rackham
 RibiClasses
+RibiLibraries
 Richel
 Richel's
 Richèl

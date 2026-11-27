@@ -34,7 +34,6 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   -Iribi_classes/CppXml \
   -I../BoostGraphTutorial/BoostGraphTutorial \
   -I../StyleSheetSetter \
-  -I../RibiLibraries/Apfloat \
   -I/usr/include/c++/5 \
   -I/usr/include/x86_64-linux-gnu/c++/5 \
   -I/usr/include/qt4 \

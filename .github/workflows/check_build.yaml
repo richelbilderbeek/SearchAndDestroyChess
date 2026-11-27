@@ -34,9 +34,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qtbase5-dev qtmultimedia5-dev libboost-all-dev libsfml-dev
 
-      - name: Download dependencies
-        run: |
-          ./download_other_githubs
 
       - name: Build the tests, with code coverage
         run: |
