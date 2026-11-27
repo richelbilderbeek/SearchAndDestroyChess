@@ -10,10 +10,6 @@ if [ ! -d DotMatrix ]; then
   git clone -b develop https://github.com/richelbilderbeek/DotMatrix
 fi
 
-if [ ! -d RibiClasses ]; then
-  git clone -b develop https://github.com/richelbilderbeek/RibiClasses
-fi
-
 if [ ! -d RibiLibraries ]; then
   git clone -b develop https://github.com/richelbilderbeek/RibiLibraries
 fi

@@ -9,29 +9,29 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   $h_files \
   -- \
   -c -std=c++11 -fPIC \
-  -I../RibiClasses/CppAbout \
+  -Iribi_classes/CppAbout \
   -I../ConceptMap \
-  -I../RibiClasses/CppContainer \
-  -I../RibiClasses/CppCounter \
-  -I../RibiClasses/CppFuzzy_equal_to \
-  -I../RibiClasses/CppGeometry \
-  -I../RibiClasses/CppHelp \
-  -I../RibiClasses/CppTestTimer \
-  -I../RibiClasses/CppFileIo \
-  -I../RibiClasses/CppMenuDialog \
-  -I../RibiClasses/CppPlane \
-  -I../RibiClasses/CppQtAboutDialog \
-  -I../RibiClasses/CppQtArrowItem \
+  -Iribi_classes/CppContainer \
+  -Iribi_classes/CppCounter \
+  -Iribi_classes/CppFuzzy_equal_to \
+  -Iribi_classes/CppGeometry \
+  -Iribi_classes/CppHelp \
+  -Iribi_classes/CppTestTimer \
+  -Iribi_classes/CppFileIo \
+  -Iribi_classes/CppMenuDialog \
+  -Iribi_classes/CppPlane \
+  -Iribi_classes/CppQtAboutDialog \
+  -Iribi_classes/CppQtArrowItem \
   -I../QtConceptMap \
-  -I../RibiClasses/CppQtHideAndShowDialog \
-  -I../RibiClasses/CppQtKeyboardFriendlyGraphicsView \
-  -I../RibiClasses/CppQtQuadBezierArrowItem \
-  -I../RibiClasses/CppQtRoundedEditRectItem \
-  -I../RibiClasses/CppQtRoundedRectItem \
-  -I../RibiClasses/CppQtScopedDisable \
-  -I../RibiClasses/CppRibiRegex \
-  -I../RibiClasses/CppTrace \
-  -I../RibiClasses/CppXml \
+  -Iribi_classes/CppQtHideAndShowDialog \
+  -Iribi_classes/CppQtKeyboardFriendlyGraphicsView \
+  -Iribi_classes/CppQtQuadBezierArrowItem \
+  -Iribi_classes/CppQtRoundedEditRectItem \
+  -Iribi_classes/CppQtRoundedRectItem \
+  -Iribi_classes/CppQtScopedDisable \
+  -Iribi_classes/CppRibiRegex \
+  -Iribi_classes/CppTrace \
+  -Iribi_classes/CppXml \
   -I../BoostGraphTutorial/BoostGraphTutorial \
   -I../StyleSheetSetter \
   -I../RibiLibraries/Apfloat \
