@@ -50,6 +50,7 @@ UU
 Uppsala
 WebAssembly
 Yadav
+Zensical
 capturer
 carnaval
 codecov
